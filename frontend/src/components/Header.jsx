@@ -73,7 +73,7 @@ const Header = ({ title }) => {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <header className="sticky top-0 z-[50] w-full bg-card/95 border-b border-border">
+    <header className="sticky top-0 z-30 w-full bg-card/95 border-b border-border">
       <div className="max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between gap-4">
         {/* Left: Branding & Nav */}
         <div className="flex items-center gap-8">

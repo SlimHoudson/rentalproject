@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
@@ -25,10 +26,10 @@ const ReceiptModal = ({ booking, onClose, user }) => {
     return `${diffDays} Hari`;
   };
 
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-sm animate-fade-in overflow-y-auto" onClick={onClose}>
+  return createPortal(
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-sm animate-fade-in overflow-y-auto" onClick={onClose}>
       <div 
-        className="bg-card rounded-3xl sm:rounded-[2.5rem] shadow-2xl w-full max-w-md my-auto overflow-hidden animate-zoom-in border border-border flex flex-col max-h-[90vh]" 
+        className="bg-card rounded-3xl sm:rounded-[2.5rem] shadow-2xl w-full max-w-md my-auto overflow-hidden animate-zoom-in border border-border flex flex-col max-h-[90vh] relative z-10" 
         onClick={(e) => e.stopPropagation()}
       >
         {/* Receipt Header */}
@@ -135,7 +136,8 @@ const ReceiptModal = ({ booking, onClose, user }) => {
           </button>
         </footer>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
@@ -303,9 +305,9 @@ const BookingHistory = () => {
       )}
 
       {/* Cancel Confirmation */}
-      {bookingToCancel && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/75 animate-fade-in">
-          <div className="bg-card rounded-[2.5rem] p-10 max-w-sm w-full border border-border shadow-2xl animate-zoom-in text-center space-y-6">
+      {bookingToCancel && createPortal(
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={() => setBookingToCancel(null)}>
+          <div className="bg-card rounded-[2.5rem] p-10 max-w-sm w-full border border-border shadow-2xl animate-zoom-in text-center space-y-6 relative z-10" onClick={(e) => e.stopPropagation()}>
             <div className="w-20 h-20 rounded-3xl bg-destructive/10 flex items-center justify-center mx-auto shadow-inner text-destructive">
               <span className="material-symbols-outlined text-4xl">warning</span>
             </div>
@@ -318,7 +320,8 @@ const BookingHistory = () => {
               <button onClick={() => setBookingToCancel(null)} className="w-full py-4 rounded-2xl bg-muted text-foreground font-black hover:bg-muted transition-all">Pertahankan Pesanan</button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {selectedBooking && (
