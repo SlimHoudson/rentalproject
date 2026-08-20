@@ -48,11 +48,16 @@ router.post('/:id/return', auth, adminAuth, async (req, res) => {
     booking.lateFee = lateFee || 0;
     await booking.save();
 
-    const car = booking.car;
-    car.status = 'Tersedia';
-    await car.save();
+    const car = await Car.findById(booking.car._id || booking.car);
+    if (car) {
+      car.stock = (car.stock || 0) + 1;
+      if (car.status !== 'Perawatan') {
+        car.status = 'Tersedia';
+      }
+      await car.save();
+    }
 
-    res.json({ message: 'Car returned successfully', booking });
+    res.json({ message: 'Pengembalian mobil berhasil dicatat & stok armada dipulihkan.', booking });
   } catch (err) {
     res.status(500).json({ error: err.message || 'Server error' });
   }

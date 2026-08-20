@@ -11,11 +11,15 @@ exports.createBooking = asyncHandler(async (req, res, next) => {
     return res.status(404).json({ error: 'Mobil tidak ditemukan.' });
   }
 
-  if (car.status !== 'Tersedia') {
-    return res.status(400).json({ error: 'Mobil tidak tersedia untuk disewa.' });
+  if (car.status === 'Perawatan') {
+    return res.status(400).json({ error: 'Mobil sedang dalam masa perawatan dan tidak dapat disewa.' });
   }
 
-  // Double check overlap in controller for better error handling
+  const currentStock = car.stock !== undefined ? car.stock : 1;
+  if (currentStock <= 0 || car.status === 'Disewa') {
+    return res.status(400).json({ error: 'Stok unit mobil ini sedang habis disewa.' });
+  }
+
   const start = new Date(startDate);
   const end = new Date(endDate);
 
@@ -23,16 +27,16 @@ exports.createBooking = asyncHandler(async (req, res, next) => {
     return res.status(400).json({ error: 'Format tanggal tidak valid.' });
   }
 
-  const existingBooking = await Booking.findOne({
+  const overlappingCount = await Booking.countDocuments({
     car: carId,
-    status: { $in: ['Aktif', 'Pending Payment'] },
+    status: { $in: ['Aktif', 'Pending Payment', 'Menunggu Konfirmasi'] },
     $or: [
       { startDate: { $lte: end }, endDate: { $gte: start } }
     ]
   });
 
-  if (existingBooking) {
-    return res.status(400).json({ error: 'Mobil sudah dipesan untuk tanggal tersebut.' });
+  if (overlappingCount >= currentStock) {
+    return res.status(400).json({ error: `Semua unit mobil (${currentStock} unit) sudah dipesan untuk rentang tanggal tersebut.` });
   }
 
   const orderId = `LX-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
@@ -72,6 +76,15 @@ exports.createBooking = asyncHandler(async (req, res, next) => {
   });
 
   await booking.save();
+
+  // Decrement car stock by 1
+  const newStock = Math.max(0, currentStock - 1);
+  car.stock = newStock;
+  if (newStock === 0) {
+    car.status = 'Disewa';
+  }
+  await car.save();
+
   res.status(201).json(booking);
 });
 
@@ -90,13 +103,21 @@ exports.cancelBooking = asyncHandler(async (req, res, next) => {
   const booking = await Booking.findOne(query);
   if (!booking) return res.status(404).json({ error: 'Pesanan tidak ditemukan.' });
 
+  if (booking.status === 'Dibatalkan' || booking.status === 'Ditolak') {
+    return res.status(400).json({ error: 'Pesanan ini sudah dibatalkan sebelumnya.' });
+  }
+
   booking.status = 'Dibatalkan';
   booking.paymentStatus = 'failed';
   await booking.save();
 
+  // Restore stock (+1)
   const car = await Car.findById(booking.car);
   if (car) {
-    car.status = 'Tersedia';
+    car.stock = (car.stock || 0) + 1;
+    if (car.status !== 'Perawatan') {
+      car.status = 'Tersedia';
+    }
     await car.save();
   }
 
@@ -110,8 +131,16 @@ exports.deleteBooking = asyncHandler(async (req, res, next) => {
     return res.status(404).json({ error: 'Pesanan tidak ditemukan.' });
   }
 
-  if (booking.car && (booking.status === 'Aktif' || booking.status === 'Menunggu Konfirmasi')) {
-    await Car.findByIdAndUpdate(booking.car, { status: 'Tersedia' });
+  // Restore stock if the deleted booking was holding a unit
+  if (booking.car && booking.status !== 'Dibatalkan' && booking.status !== 'Ditolak' && booking.status !== 'Selesai') {
+    const car = await Car.findById(booking.car);
+    if (car) {
+      car.stock = (car.stock || 0) + 1;
+      if (car.status !== 'Perawatan') {
+        car.status = 'Tersedia';
+      }
+      await car.save();
+    }
   }
 
   await Booking.findByIdAndDelete(req.params.id);
@@ -133,9 +162,13 @@ exports.validateBooking = asyncHandler(async (req, res, next) => {
     booking.validatedBy = req.user.id;
     booking.validationNotes = notes || 'Pesanan telah diverifikasi dan disetujui oleh admin.';
     
-    // Set car status to Disewa
+    // Check if stock is exhausted
     if (booking.car) {
-      await Car.findByIdAndUpdate(booking.car._id || booking.car, { status: 'Disewa' });
+      const car = await Car.findById(booking.car._id || booking.car);
+      if (car && car.stock <= 0 && car.status !== 'Perawatan') {
+        car.status = 'Disewa';
+        await car.save();
+      }
     }
     
     await booking.save();
@@ -146,9 +179,16 @@ exports.validateBooking = asyncHandler(async (req, res, next) => {
     booking.validatedAt = new Date();
     booking.validatedBy = req.user.id;
     
-    // Release car back to Tersedia
+    // Release stock (+1)
     if (booking.car) {
-      await Car.findByIdAndUpdate(booking.car._id || booking.car, { status: 'Tersedia' });
+      const car = await Car.findById(booking.car._id || booking.car);
+      if (car) {
+        car.stock = (car.stock || 0) + 1;
+        if (car.status !== 'Perawatan') {
+          car.status = 'Tersedia';
+        }
+        await car.save();
+      }
     }
     
     await booking.save();

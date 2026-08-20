@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 
@@ -140,67 +141,81 @@ const CarsPage = () => {
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 content-auto">
-            {cars.map((car) => (
-              <div key={car._id || car.id} className="group card !p-0 overflow-hidden flex flex-col hover:border-primary/40 transition-colors">
-                <div className="relative h-64 overflow-hidden">
-                  <img 
-                    src={car.imageUrl} 
-                    alt={car.name} 
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                    loading="lazy" 
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=80';
-                    }}
-                  />
-                  <div className="absolute top-5 right-5 px-3 py-1 bg-white/90 dark:bg-zinc-900/90 rounded-full text-[10px] font-black text-foreground shadow-sm uppercase tracking-widest border border-border">
-                    {car.category || 'Luxury'}
+            {cars.map((car) => {
+              const stock = car.stock !== undefined ? car.stock : 1;
+              const isAvailable = (car.status === 'Tersedia' || !car.status) && stock > 0;
+
+              return (
+                <div key={car._id || car.id} className="group card !p-0 overflow-hidden flex flex-col hover:border-primary/40 transition-colors">
+                  <div className="relative h-64 overflow-hidden">
+                    <img 
+                      src={car.imageUrl} 
+                      alt={car.name} 
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                      loading="lazy" 
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=80';
+                      }}
+                    />
+                    <div className="flex items-center gap-2 absolute top-5 right-5">
+                      <span className={`px-3 py-1 rounded-full text-[10px] font-black shadow-sm uppercase tracking-widest border backdrop-blur-sm ${
+                        isAvailable ? 'bg-emerald-500/90 text-white border-emerald-400' : 'bg-destructive/90 text-white border-destructive'
+                      }`}>
+                        {isAvailable ? `Sisa ${stock} Unit` : 'Habis Disewa'}
+                      </span>
+                      <span className="px-3 py-1 bg-white/90 dark:bg-zinc-900/90 rounded-full text-[10px] font-black text-foreground shadow-sm uppercase tracking-widest border border-border">
+                        {car.category || 'Luxury'}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="p-8 flex-1 flex flex-col space-y-6">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="text-xl font-black text-foreground leading-none mb-1">{car.name}</h3>
+                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{car.brand} • {car.year}</p>
+                      </div>
+                      <div className="flex items-center gap-1 bg-amber-500/10 px-2 py-1 rounded-lg">
+                        <span className="material-symbols-outlined text-amber-500 text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                        <span className="text-[10px] font-black text-amber-500 uppercase">{car.rating || '4.9'}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-6 py-4 border-y border-border/50">
+                      <div className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-primary text-lg">settings</span>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase">{car.transmission || 'Otomatis'}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-primary text-lg">person</span>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase">{car.seats || '5'} Kursi</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-primary text-lg">local_gas_station</span>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase">{car.fuel || 'Bensin'}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2">
+                      <div>
+                        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Harga Sewa / Hari</p>
+                        <p className="text-xl font-black text-primary leading-none">Rp {car.pricePerDay?.toLocaleString('id-ID')}</p>
+                      </div>
+                      <button
+                        onClick={() => setSelectedCar(car)}
+                        disabled={!isAvailable}
+                        className={`btn btn-primary px-8 py-3.5 rounded-2xl text-xs font-black tracking-widest uppercase transition-all ${
+                          !isAvailable ? 'opacity-50 grayscale pointer-events-none cursor-not-allowed' : 'hover:scale-105 active:scale-95 shadow-lg shadow-primary/25'
+                        }`}
+                      >
+                        {isAvailable ? 'Sewa Sekarang' : (car.status === 'Perawatan' ? 'Perawatan' : 'Habis Disewa')}
+                      </button>
+                    </div>
                   </div>
                 </div>
-                
-                <div className="p-8 flex-1 flex flex-col space-y-6">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-xl font-black text-foreground leading-none mb-1">{car.name}</h3>
-                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{car.brand} • {car.year}</p>
-                    </div>
-                    <div className="flex items-center gap-1 bg-amber-500/10 px-2 py-1 rounded-lg">
-                      <span className="material-symbols-outlined text-amber-500 text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                      <span className="text-[10px] font-black text-amber-500 uppercase">{car.rating || '4.9'}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-6 py-4 border-y border-border/50">
-                    <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-primary text-lg">settings</span>
-                      <span className="text-[10px] font-bold text-muted-foreground uppercase">{car.transmission || 'Otomatis'}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-primary text-lg">person</span>
-                      <span className="text-[10px] font-bold text-muted-foreground uppercase">{car.seats || '5'} Kursi</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-primary text-lg">local_gas_station</span>
-                      <span className="text-[10px] font-bold text-muted-foreground uppercase">{car.fuel || 'Bensin'}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-2">
-                    <div>
-                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Harga Sewa / Hari</p>
-                      <p className="text-xl font-black text-primary leading-none">Rp {car.pricePerDay?.toLocaleString('id-ID')}</p>
-                    </div>
-                    <button
-                      onClick={() => setSelectedCar(car)}
-                      disabled={car.status !== 'Tersedia'}
-                      className={`btn btn-primary px-8 py-3.5 rounded-2xl text-xs font-black tracking-widest uppercase ${car.status !== 'Tersedia' ? 'opacity-50 grayscale pointer-events-none' : ''}`}
-                    >
-                      {car.status === 'Tersedia' ? 'Sewa Sekarang' : car.status}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Enhanced Numbered Pagination */}
@@ -244,48 +259,61 @@ const CarsPage = () => {
         </>
       )}
 
-      {/* Premium Booking Modal */}
-      {selectedCar && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/75 animate-fade-in">
-          <div className="bg-card rounded-[2.5rem] shadow-2xl w-full max-w-lg overflow-hidden animate-zoom-in border border-border">
+      {/* Premium Booking Modal with React Portal */}
+      {selectedCar && createPortal(
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-sm animate-fade-in overflow-y-auto" onClick={() => setSelectedCar(null)}>
+          <div className="bg-card rounded-[2.5rem] shadow-2xl w-full max-w-lg my-auto overflow-hidden animate-zoom-in border border-border relative z-10" onClick={(e) => e.stopPropagation()}>
             <div className="relative h-48">
-              <img src={selectedCar.imageUrl} alt="" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent flex flex-col justify-end p-8">
-                <h3 className="text-white font-black text-3xl mb-1">{selectedCar.name}</h3>
-                <p className="text-primary font-bold text-xs uppercase tracking-widest">{selectedCar.brand} • Layanan Rental</p>
+              <img 
+                src={selectedCar.imageUrl} 
+                alt="" 
+                className="w-full h-full object-cover" 
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=80';
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-8">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="px-3 py-0.5 rounded-full bg-emerald-500 text-white text-[9px] font-black uppercase tracking-wider">
+                    Sisa {selectedCar.stock !== undefined ? selectedCar.stock : 1} Unit Tersedia
+                  </span>
+                </div>
+                <h3 className="text-white font-black text-2xl sm:text-3xl leading-tight">{selectedCar.name}</h3>
+                <p className="text-primary font-bold text-xs uppercase tracking-widest">{selectedCar.brand} • Rp {selectedCar.pricePerDay?.toLocaleString('id-ID')} / hari</p>
               </div>
-              <button onClick={() => setSelectedCar(null)} className="absolute top-6 right-6 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/80 transition-all">
-                <span className="material-symbols-outlined">close</span>
+              <button onClick={() => setSelectedCar(null)} className="absolute top-5 right-5 w-9 h-9 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/90 transition-all border border-white/20">
+                <span className="material-symbols-outlined text-base">close</span>
               </button>
             </div>
 
-            <div className="p-8 lg:p-10 space-y-8">
-              <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-3">
+            <div className="p-6 lg:p-8 space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Mulai Sewa</label>
                   <input 
                     type="date" 
-                    className="w-full p-4 rounded-2xl bg-muted/30 border border-border text-sm font-bold focus:ring-4 focus:ring-primary/10 outline-none transition-all"
+                    className="w-full p-3.5 rounded-2xl bg-muted/30 border border-border text-xs font-bold focus:ring-4 focus:ring-primary/10 outline-none transition-all"
                     value={bookingDates.start}
                     onChange={(e) => setBookingDates({...bookingDates, start: e.target.value})}
                   />
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Selesai Sewa</label>
                   <input 
                     type="date" 
-                    className="w-full p-4 rounded-2xl bg-muted/30 border border-border text-sm font-bold focus:ring-4 focus:ring-primary/10 outline-none transition-all"
+                    className="w-full p-3.5 rounded-2xl bg-muted/30 border border-border text-xs font-bold focus:ring-4 focus:ring-primary/10 outline-none transition-all"
                     value={bookingDates.end}
                     onChange={(e) => setBookingDates({...bookingDates, end: e.target.value})}
                   />
                 </div>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Titik Penjemputan</label>
                 <div className="relative">
                   <select 
-                    className="w-full p-4 pr-10 rounded-2xl bg-muted/30 border border-border text-sm font-bold focus:ring-4 focus:ring-primary/10 outline-none transition-all appearance-none"
+                    className="w-full p-3.5 pr-10 rounded-2xl bg-muted/30 border border-border text-xs font-bold focus:ring-4 focus:ring-primary/10 outline-none transition-all appearance-none"
                     value={bookingDates.pickup}
                     onChange={(e) => setBookingDates({...bookingDates, pickup: e.target.value})}
                   >
@@ -294,14 +322,14 @@ const CarsPage = () => {
                     <option>Lobi Hotel (Area Kota)</option>
                     <option>Antar ke Rumah (Surcharge)</option>
                   </select>
-                  <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">expand_more</span>
+                  <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground text-lg">expand_more</span>
                 </div>
               </div>
 
-              <div className="pt-4 space-y-4">
+              <div className="pt-2 space-y-3">
                 <button 
                   onClick={handleBookingConfirm}
-                  className="w-full py-5 rounded-2xl bg-primary text-white font-black text-sm shadow-[0_20px_50px_rgba(79,70,229,0.3)] hover:-translate-y-1 transition-all uppercase tracking-widest"
+                  className="w-full py-4 rounded-2xl bg-primary text-white font-black text-xs shadow-xl shadow-primary/25 hover:-translate-y-0.5 transition-all uppercase tracking-widest"
                 >
                   Lanjut ke Pembayaran
                 </button>
@@ -309,7 +337,8 @@ const CarsPage = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

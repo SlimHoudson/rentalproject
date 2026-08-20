@@ -81,8 +81,13 @@ router.post('/notification', callbackLimiter, asyncHandler(async (req, res) => {
     if (transaction_status === 'settlement' || transaction_status === 'capture') {
         updatedStatus = 'Menunggu Konfirmasi';
         updatedPaymentStatus = 'paid';
-        // Keep car status or reserve it
-        await Car.findByIdAndUpdate(booking.car, { status: 'Disewa' });
+        
+        const car = await Car.findById(booking.car);
+        if (car && car.stock <= 0 && car.status !== 'Perawatan') {
+            car.status = 'Disewa';
+            await car.save();
+        }
+        
         await User.findByIdAndUpdate(booking.user, { $inc: { points: 250 } });
         
         // Point deduction logic check
@@ -93,7 +98,15 @@ router.post('/notification', callbackLimiter, asyncHandler(async (req, res) => {
     } else if (transaction_status === 'deny' || transaction_status === 'cancel' || transaction_status === 'expire') {
         updatedStatus = transaction_status === 'expire' ? 'Expired' : 'Payment Failed';
         updatedPaymentStatus = transaction_status === 'expire' ? 'expired' : 'failed';
-        await Car.findByIdAndUpdate(booking.car, { status: 'Tersedia' });
+        
+        const car = await Car.findById(booking.car);
+        if (car) {
+            car.stock = (car.stock || 0) + 1;
+            if (car.status !== 'Perawatan') {
+                car.status = 'Tersedia';
+            }
+            await car.save();
+        }
     }
 
     booking.status = updatedStatus;
@@ -132,7 +145,12 @@ router.post('/demo-confirm', auth, asyncHandler(async (req, res) => {
     booking.paidAt = new Date();
     booking.paymentMethod = 'Demo Payment';
     
-    await Car.findByIdAndUpdate(booking.car, { status: 'Disewa' });
+    const car = await Car.findById(booking.car);
+    if (car && car.stock <= 0 && car.status !== 'Perawatan') {
+        car.status = 'Disewa';
+        await car.save();
+    }
+    
     await User.findByIdAndUpdate(booking.user, { $inc: { points: 250 } });
 
     await booking.save();

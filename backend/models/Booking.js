@@ -41,18 +41,23 @@ bookingSchema.index({ user: 1 });
 bookingSchema.index({ paymentStatus: 1 });
 bookingSchema.index({ createdAt: 1 });
 
-// Prevent overlapping bookings for the same car
+// Prevent overlapping bookings exceeding the car stock
 bookingSchema.pre('save', async function () {
   if (this.isNew) {
-    const existingBooking = await this.constructor.findOne({
+    const CarModel = mongoose.model('Car');
+    const car = await CarModel.findById(this.car);
+    const totalStock = car ? (car.stock !== undefined ? car.stock : 1) : 1;
+
+    const overlappingCount = await this.constructor.countDocuments({
       car: this.car,
       status: { $in: ['Aktif', 'Pending Payment', 'Menunggu Konfirmasi'] },
       $or: [
         { startDate: { $lte: this.endDate }, endDate: { $gte: this.startDate } }
       ]
     });
-    if (existingBooking) {
-      const err = new Error('Mobil sudah dipesan untuk tanggal tersebut.');
+
+    if (overlappingCount >= totalStock && totalStock > 0) {
+      const err = new Error(`Stok mobil ini (${totalStock} unit) sudah penuh terpesan untuk rentang tanggal tersebut.`);
       err.name = 'ValidationError';
       throw err;
     }
