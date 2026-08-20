@@ -36,19 +36,19 @@ app.use(async (req, res, next) => {
 });
 
 const { apiLimiter } = require('./middleware/rateLimiter');
-app.use('/api', apiLimiter);
+app.use(['/api', '/'], apiLimiter);
 
 // Routes
 const carRoutes = require("./routes/cars");
 const authRoutes = require("./routes/auth");
 
-// API Routes
-app.use("/api/cars", carRoutes);
-app.use("/api/auth", authRoutes);
-app.use("/api/bookings", require("./routes/bookings"));
-app.use("/api/users", require("./routes/users"));
-app.use("/api/payment", require("./routes/payment"));
-app.use("/api/messages", require("./routes/messages"));
+// API Routes (supports both /api/* and stripped /* from Vercel function routing)
+app.use(["/api/cars", "/cars"], carRoutes);
+app.use(["/api/auth", "/auth"], authRoutes);
+app.use(["/api/bookings", "/bookings"], require("./routes/bookings"));
+app.use(["/api/users", "/users"], require("./routes/users"));
+app.use(["/api/payment", "/payment"], require("./routes/payment"));
+app.use(["/api/messages", "/messages"], require("./routes/messages"));
 
 // Test Route
 app.get("/", (req, res) => {
