@@ -62,7 +62,8 @@ router.post('/create-transaction', auth, asyncHandler(async (req, res) => {
     res.json({ 
         token: transaction.token,
         redirect_url: transaction.redirect_url,
-        orderId: booking.orderId
+        orderId: booking.orderId,
+        clientKey: process.env.MIDTRANS_CLIENT_KEY
     });
 }));
 

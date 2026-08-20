@@ -151,8 +151,21 @@ const CheckoutPage = () => {
         return;
       }
 
-      if (typeof window.snap !== 'undefined') {
-        window.snap.pay(data.token, {
+      let snapInstance = window.snap;
+      if (!snapInstance && data.clientKey) {
+        await new Promise((resolve) => {
+          const script = document.createElement('script');
+          script.src = 'https://app.sandbox.midtrans.com/snap/snap.js';
+          script.setAttribute('data-client-key', data.clientKey);
+          script.onload = () => resolve(window.snap);
+          script.onerror = () => resolve(null);
+          document.head.appendChild(script);
+        });
+        snapInstance = window.snap;
+      }
+
+      if (snapInstance && data.token) {
+        snapInstance.pay(data.token, {
           onSuccess: () => {
             setIsProcessing(true);
             checkPaymentStatus(data.orderId);
@@ -163,17 +176,20 @@ const CheckoutPage = () => {
           },
           onError: () => {
             setIsProcessing(false);
-            setError('Payment failed, please try again.');
+            setError('Pembayaran gagal, silakan coba lagi.');
           },
           onClose: () => {
             setIsProcessing(true);
             checkPaymentStatus(data.orderId);
           }
         });
+      } else {
+        setIsProcessing(false);
+        setError('Sistem gateway pembayaran tidak tersedia.');
       }
     } catch (err) {
       setIsProcessing(false);
-      setError(err.message || 'An error occurred during synchronization.');
+      setError(err.message || 'Terjadi kesalahan saat memproses transaksi.');
     }
   };
 
