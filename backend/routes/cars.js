@@ -65,7 +65,7 @@ router.get('/', asyncHandler(async (req, res) => {
   const totalPages = Math.ceil(total / limit);
   const hasMore = page < totalPages;
 
-  res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=60');
+  res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.json({
     data: cars,
     meta: { page, limit, total, totalPages, hasMore },

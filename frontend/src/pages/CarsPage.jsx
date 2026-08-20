@@ -25,7 +25,7 @@ const CarsPage = () => {
       try {
         setLoading(true);
         const catQuery = category !== 'Semua' ? `&category=${encodeURIComponent(category)}` : '';
-        const res = await api.get(`/cars?page=${pageNumber}&limit=9&search=${encodeURIComponent(search)}${catQuery}`, {
+        const res = await api.get(`/cars?page=${pageNumber}&limit=9&search=${encodeURIComponent(search)}${catQuery}&_t=${Date.now()}`, {
           signal: controller.signal
         });
         const data = res.data;
@@ -143,7 +143,16 @@ const CarsPage = () => {
             {cars.map((car) => (
               <div key={car._id || car.id} className="group card !p-0 overflow-hidden flex flex-col hover:border-primary/40 transition-colors">
                 <div className="relative h-64 overflow-hidden">
-                  <img src={car.imageUrl} alt={car.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                  <img 
+                    src={car.imageUrl} 
+                    alt={car.name} 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                    loading="lazy" 
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=80';
+                    }}
+                  />
                   <div className="absolute top-5 right-5 px-3 py-1 bg-white/90 dark:bg-zinc-900/90 rounded-full text-[10px] font-black text-foreground shadow-sm uppercase tracking-widest border border-border">
                     {car.category || 'Luxury'}
                   </div>

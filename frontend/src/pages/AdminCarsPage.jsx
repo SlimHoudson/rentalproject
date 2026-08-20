@@ -57,6 +57,13 @@ const Field = ({ label, error, children }) => (
 
 const inputClass = (err) => `w-full bg-muted/30 border rounded-2xl px-6 py-4 text-sm font-bold text-foreground outline-none transition-all placeholder:text-muted-foreground/30 ${err ? 'border-destructive/50 focus:ring-4 focus:ring-destructive/10' : 'border-border focus:border-primary/50 focus:ring-4 focus:ring-primary/5'}`;
 
+const QUICK_IMAGES = [
+  { label: 'Sedan Mewah', url: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&auto=format&fit=crop&q=80' },
+  { label: 'SUV Premium', url: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&auto=format&fit=crop&q=80' },
+  { label: 'Mobil Sport', url: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800&auto=format&fit=crop&q=80' },
+  { label: 'Mobil Listrik', url: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&auto=format&fit=crop&q=80' },
+];
+
 const CarFormModal = ({ car, onClose, onSave }) => {
   const isEdit = !!car;
   const [form, setForm] = useState({
@@ -75,9 +82,13 @@ const CarFormModal = ({ car, onClose, onSave }) => {
   });
   const [errors, setErrors] = useState({});
   const [isSaving, setIsSaving] = useState(false);
+  const [imgStatus, setImgStatus] = useState(car?.imageUrl ? 'loaded' : 'idle');
 
   const set = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+    if (field === 'imageUrl') {
+      setImgStatus(value.trim() ? 'loading' : 'idle');
+    }
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: '' }));
     }
@@ -129,22 +140,75 @@ const CarFormModal = ({ car, onClose, onSave }) => {
         </header>
 
         <div className="overflow-y-auto flex-1 px-10 py-8 space-y-8 no-scrollbar">
-          {form.imageUrl && (
-            <div className="h-48 rounded-[2rem] overflow-hidden bg-muted border border-border relative group">
-                <img src={form.imageUrl} alt="preview" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="absolute bottom-6 left-6 flex items-center gap-2">
-                    <span className="px-3 py-1.5 bg-primary/20 border border-primary/30 rounded-lg text-[8px] font-black uppercase tracking-widest text-primary">Foto Terpasang</span>
+          {/* Dynamic Image Preview */}
+          <div className="h-52 rounded-[2rem] overflow-hidden bg-muted/30 border border-border relative flex items-center justify-center group">
+            {form.imageUrl ? (
+              <>
+                <img 
+                  src={form.imageUrl} 
+                  alt="preview" 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  onLoad={() => setImgStatus('loaded')}
+                  onError={() => setImgStatus('error')}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20"></div>
+                
+                <div className="absolute bottom-5 left-5 flex items-center gap-2">
+                  {imgStatus === 'loaded' && (
+                    <span className="px-3.5 py-1.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 shadow-lg backdrop-blur-sm">
+                      <span className="material-symbols-outlined text-sm">check_circle</span>
+                      Foto Terpasang
+                    </span>
+                  )}
+                  {imgStatus === 'error' && (
+                    <span className="px-3.5 py-1.5 bg-destructive/20 text-destructive border border-destructive/30 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 shadow-lg backdrop-blur-sm">
+                      <span className="material-symbols-outlined text-sm">error</span>
+                      URL Gambar Tidak Valid / Rusak
+                    </span>
+                  )}
+                  {imgStatus === 'loading' && (
+                    <span className="px-3.5 py-1.5 bg-primary/20 text-primary border border-primary/30 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 shadow-lg backdrop-blur-sm animate-pulse">
+                      <span className="material-symbols-outlined text-sm animate-spin">progress_activity</span>
+                      Memuat Gambar...
+                    </span>
+                  )}
                 </div>
-            </div>
-          )}
+              </>
+            ) : (
+              <div className="flex flex-col items-center justify-center gap-3 p-6 text-center text-muted-foreground/60">
+                <span className="material-symbols-outlined text-4xl text-primary/40">add_photo_alternate</span>
+                <p className="text-xs font-bold">Masukkan URL gambar di bawah untuk melihat pratinjau</p>
+              </div>
+            )}
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="md:col-span-2">
+            <div className="md:col-span-2 space-y-3">
               <Field label="URL Foto Mobil" error={errors.imageUrl}>
-                <input className={inputClass(errors.imageUrl)} placeholder="https://images.unsplash.com/..." value={form.imageUrl} onChange={(e) => set('imageUrl', e.target.value)} />
+                <input 
+                  className={inputClass(errors.imageUrl)} 
+                  placeholder="https://images.unsplash.com/photo-..." 
+                  value={form.imageUrl} 
+                  onChange={(e) => set('imageUrl', e.target.value)} 
+                />
               </Field>
+              
+              {/* Quick Sample Image Presets */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Pilihan Cepat:</span>
+                {QUICK_IMAGES.map((preset) => (
+                  <button
+                    key={preset.label}
+                    type="button"
+                    onClick={() => set('imageUrl', preset.url)}
+                    className="px-3 py-1 bg-muted/40 hover:bg-primary/10 hover:text-primary hover:border-primary/40 border border-border rounded-lg text-[9px] font-bold transition-all"
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
             </div>
+
             <div className="md:col-span-2">
               <Field label="Nama Mobil" error={errors.name}>
                 <input className={inputClass(errors.name)} placeholder="Contoh: Mercedes-Benz S-Class" value={form.name} onChange={(e) => set('name', e.target.value)} />
@@ -234,7 +298,7 @@ const AdminCarsPage = () => {
 
   const fetchCars = async () => {
     try {
-      const response = await api.get('/cars?limit=100');
+      const response = await api.get(`/cars?limit=100&_t=${Date.now()}`);
       const responseData = response.data;
       const list = Array.isArray(responseData) ? responseData : (responseData?.data || responseData?.cars || []);
       setCars(list);
@@ -256,16 +320,23 @@ const AdminCarsPage = () => {
     try {
       const isEdit = modal.type === 'edit';
       const carId = data._id || modal.car?._id || modal.car?.id;
+      
+      // Optimistic update for immediate visual feedback
       if (isEdit && carId) {
+        setCars((prev) => prev.map((c) => (c._id === carId || c.id === carId ? { ...c, ...data } : c)));
         await api.put(`/cars/${carId}`, data);
       } else {
-        await api.post('/cars', data);
+        const res = await api.post('/cars', data);
+        if (res.data) {
+          setCars((prev) => [res.data, ...prev]);
+        }
       }
       showToast(`${data.name} berhasil ${isEdit ? 'diperbarui' : 'ditambahkan'}`);
       fetchCars();
       setModal(null);
     } catch (err) {
       showToast(err.response?.data?.error || err.message, 'error');
+      fetchCars(); // Revert on failure
     }
   };
 
@@ -409,7 +480,16 @@ const AdminCarsPage = () => {
                     <td className="px-8 py-6">
                       <div className="flex items-center gap-6">
                         <div className="w-24 h-16 rounded-2xl overflow-hidden bg-muted border border-border group-hover:scale-105 transition-transform">
-                          <img className="w-full h-full object-cover" src={car.imageUrl} alt={car.name} loading="lazy" />
+                          <img 
+                            className="w-full h-full object-cover" 
+                            src={car.imageUrl} 
+                            alt={car.name} 
+                            loading="lazy" 
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=80';
+                            }}
+                          />
                         </div>
                         <div className="space-y-1">
                           <p className="font-black text-foreground text-sm uppercase tracking-tight">{car.name}</p>
