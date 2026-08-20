@@ -26,82 +26,114 @@ const ReceiptModal = ({ booking, onClose, user }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/75 animate-fade-in" onClick={onClose}>
-      <div className="bg-card rounded-[2.5rem] shadow-2xl w-full max-w-md overflow-hidden animate-zoom-in border border-border" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-sm animate-fade-in overflow-y-auto" onClick={onClose}>
+      <div 
+        className="bg-card rounded-3xl sm:rounded-[2.5rem] shadow-2xl w-full max-w-md my-auto overflow-hidden animate-zoom-in border border-border flex flex-col max-h-[90vh]" 
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Receipt Header */}
-        <div className="bg-primary p-8 text-center text-white relative overflow-hidden">
-          <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/20 shadow-md">
-            <span className="material-symbols-outlined text-white text-3xl">receipt_long</span>
+        <header className="bg-primary px-6 py-5 sm:p-6 text-center text-white relative flex-shrink-0">
+          <button 
+            onClick={onClose}
+            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-all border border-white/20"
+            title="Tutup"
+          >
+            <span className="material-symbols-outlined text-lg">close</span>
+          </button>
+          <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-2.5 border border-white/20 shadow-md">
+            <span className="material-symbols-outlined text-white text-2xl">receipt_long</span>
           </div>
-          <h2 className="font-black text-xl tracking-tight uppercase">Bukti Transaksi</h2>
-          <p className="text-white/60 text-[10px] font-black tracking-[0.2em] uppercase mt-1">Transaksi Terverifikasi</p>
-        </div>
+          <h2 className="font-black text-lg sm:text-xl tracking-tight uppercase">Bukti Transaksi</h2>
+          <p className="text-white/70 text-[9px] sm:text-[10px] font-black tracking-[0.2em] uppercase mt-0.5">Transaksi Terverifikasi • Bahrayyan Rental</p>
+        </header>
 
-        <div className="p-8 space-y-6">
-          <div className="flex justify-between items-end border-b border-border pb-6">
-            <div className="space-y-1">
-              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest leading-none">No. Pesanan</p>
-              <p className="text-sm font-bold text-foreground font-mono">#{booking._id?.slice(-8).toUpperCase() || 'N/A'}</p>
+        {/* Scrollable Content Body */}
+        <div className="overflow-y-auto flex-1 p-5 sm:p-6 space-y-4 sm:space-y-5 no-scrollbar">
+          <div className="flex justify-between items-end border-b border-border pb-4">
+            <div className="space-y-0.5">
+              <p className="text-[9px] sm:text-[10px] font-black text-muted-foreground uppercase tracking-widest leading-none">No. Pesanan</p>
+              <p className="text-xs sm:text-sm font-bold text-foreground font-mono">#{booking.orderId || booking._id?.slice(-8).toUpperCase() || 'N/A'}</p>
             </div>
-            <div className="text-right space-y-1">
-              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest leading-none">Tanggal Terbit</p>
-              <p className="text-sm font-bold text-foreground">{formatDate(new Date())}</p>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center gap-4 bg-muted/30 p-4 rounded-2xl border border-border/50">
-              <img src={booking.car?.imageUrl} alt="" className="w-20 h-12 object-cover rounded-lg shadow-sm" />
-              <div>
-                <p className="text-sm font-black text-foreground">{booking.car?.name}</p>
-                <p className="text-[10px] font-bold text-muted-foreground uppercase">{booking.car?.brand} • {booking.car?.year}</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 py-2">
-              <div className="space-y-1">
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Pelanggan</p>
-                <p className="text-xs font-bold text-foreground">{booking.user?.name || user?.name || 'Pelanggan'}</p>
-              </div>
-              <div className="space-y-1 text-right">
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Durasi Sewa</p>
-                <p className="text-xs font-bold text-primary">{getDuration()}</p>
-              </div>
-            </div>
-
-            <div className="space-y-3 pt-2">
-              <div className="flex justify-between text-xs font-medium">
-                <span className="text-muted-foreground italic">Biaya Sewa Pokok</span>
-                <span className="text-foreground font-bold">Rp {(booking.totalPrice - 150000).toLocaleString('id-ID')}</span>
-              </div>
-              <div className="flex justify-between text-xs font-medium">
-                <span className="text-muted-foreground italic">Asuransi & Proteksi Layanan</span>
-                <span className="text-foreground font-bold">Rp {(150000).toLocaleString('id-ID')}</span>
-              </div>
-              <div className="pt-4 mt-2 border-t border-border flex justify-between items-center">
-                <span className="text-sm font-black uppercase tracking-widest text-foreground">Total Dibayar</span>
-                <span className="text-xl font-black text-primary">Rp {(booking.totalPrice || 0).toLocaleString('id-ID')}</span>
-              </div>
+            <div className="text-right space-y-0.5">
+              <p className="text-[9px] sm:text-[10px] font-black text-muted-foreground uppercase tracking-widest leading-none">Tanggal Terbit</p>
+              <p className="text-xs sm:text-sm font-bold text-foreground">{formatDate(booking.createdAt || new Date())}</p>
             </div>
           </div>
 
-          <div className="pt-4">
-            <div className={`w-full py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-center ${
-              booking.status === 'Selesai' ? 'bg-green-500/10 text-green-500 border border-green-500/20' : 
-              booking.status === 'Dibatalkan' ? 'bg-destructive/10 text-destructive border border-destructive/20' :
-              'bg-primary/10 text-primary border border-primary/20 animate-pulse'
+          <div className="space-y-3.5">
+            <div className="flex items-center gap-3.5 bg-muted/30 p-3 sm:p-4 rounded-2xl border border-border/50">
+              <div className="w-16 h-12 sm:w-20 sm:h-14 rounded-xl overflow-hidden bg-muted flex-shrink-0 border border-border/40">
+                <img 
+                  src={booking.car?.imageUrl} 
+                  alt="" 
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=80';
+                  }}
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs sm:text-sm font-black text-foreground truncate">{booking.car?.name}</p>
+                <p className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase">{booking.car?.brand} • {booking.car?.year || '2024'}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 py-1 text-xs">
+              <div className="space-y-0.5">
+                <p className="text-[9px] sm:text-[10px] font-black text-muted-foreground uppercase tracking-widest">Pelanggan</p>
+                <p className="text-xs sm:text-sm font-bold text-foreground truncate">{booking.user?.name || user?.name || 'Pelanggan'}</p>
+              </div>
+              <div className="space-y-0.5 text-right">
+                <p className="text-[9px] sm:text-[10px] font-black text-muted-foreground uppercase tracking-widest">Durasi Sewa</p>
+                <p className="text-xs sm:text-sm font-bold text-primary">{getDuration()}</p>
+              </div>
+            </div>
+
+            <div className="space-y-2 pt-2 border-t border-border/60">
+              <div className="flex justify-between text-xs">
+                <span className="text-muted-foreground">Biaya Sewa Pokok</span>
+                <span className="text-foreground font-bold">Rp {(Math.max(0, (booking.totalPrice || 0) - 150000)).toLocaleString('id-ID')}</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-muted-foreground">Asuransi & Proteksi Layanan</span>
+                <span className="text-foreground font-bold">Rp 150.000</span>
+              </div>
+              <div className="pt-3 border-t border-border flex justify-between items-center">
+                <span className="text-xs sm:text-sm font-black uppercase tracking-widest text-foreground">Total Dibayar</span>
+                <span className="text-lg sm:text-xl font-black text-primary">Rp {(booking.totalPrice || 0).toLocaleString('id-ID')}</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div className={`w-full py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] text-center border ${
+              booking.status === 'Selesai' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 
+              booking.status === 'Dibatalkan' || booking.status === 'Payment Failed' ? 'bg-destructive/10 text-destructive border-destructive/20' :
+              booking.status === 'Pending Payment' ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
+              'bg-primary/10 text-primary border-primary/20'
             }`}>
-              Status: {booking.status || 'Pending'}
+              Status: {booking.status === 'Pending Payment' ? 'Menunggu Bayar' : booking.status || 'Aktif'}
             </div>
           </div>
         </div>
 
-        <button 
-          onClick={onClose}
-          className="w-full p-6 bg-muted/30 text-xs font-black uppercase tracking-widest text-muted-foreground hover:bg-muted transition-colors border-t border-border"
-        >
-          Tutup Kuitansi
-        </button>
+        {/* Sticky Footer Action */}
+        <footer className="p-4 sm:p-5 bg-muted/20 border-t border-border flex gap-3 flex-shrink-0">
+          <button 
+            onClick={() => window.print()} 
+            className="flex-1 py-3 px-4 rounded-xl bg-card border border-border hover:bg-muted text-foreground text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm"
+          >
+            <span className="material-symbols-outlined text-base">print</span>
+            Cetak
+          </button>
+          <button 
+            onClick={onClose} 
+            className="flex-1 py-3 px-4 rounded-xl bg-primary text-white hover:bg-primary/90 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-lg shadow-primary/20"
+          >
+            Tutup
+          </button>
+        </footer>
       </div>
     </div>
   );
