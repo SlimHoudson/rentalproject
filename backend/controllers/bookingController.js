@@ -77,13 +77,10 @@ exports.createBooking = asyncHandler(async (req, res, next) => {
 
   await booking.save();
 
-  // Decrement car stock by 1
+  // Decrement car stock by 1 directly in database
   const newStock = Math.max(0, currentStock - 1);
-  car.stock = newStock;
-  if (newStock === 0) {
-    car.status = 'Disewa';
-  }
-  await car.save();
+  const newStatus = newStock === 0 ? 'Disewa' : (car.status === 'Perawatan' ? 'Perawatan' : 'Tersedia');
+  await Car.findByIdAndUpdate(carId, { stock: newStock, status: newStatus });
 
   res.status(201).json(booking);
 });
@@ -114,11 +111,9 @@ exports.cancelBooking = asyncHandler(async (req, res, next) => {
   // Restore stock (+1)
   const car = await Car.findById(booking.car);
   if (car) {
-    car.stock = (car.stock || 0) + 1;
-    if (car.status !== 'Perawatan') {
-      car.status = 'Tersedia';
-    }
-    await car.save();
+    const updatedStock = (car.stock || 0) + 1;
+    const newStatus = car.status === 'Perawatan' ? 'Perawatan' : 'Tersedia';
+    await Car.findByIdAndUpdate(car._id, { stock: updatedStock, status: newStatus });
   }
 
   res.json({ message: 'Pesanan berhasil dibatalkan.', booking });
@@ -135,11 +130,9 @@ exports.deleteBooking = asyncHandler(async (req, res, next) => {
   if (booking.car && booking.status !== 'Dibatalkan' && booking.status !== 'Ditolak' && booking.status !== 'Selesai') {
     const car = await Car.findById(booking.car);
     if (car) {
-      car.stock = (car.stock || 0) + 1;
-      if (car.status !== 'Perawatan') {
-        car.status = 'Tersedia';
-      }
-      await car.save();
+      const updatedStock = (car.stock || 0) + 1;
+      const newStatus = car.status === 'Perawatan' ? 'Perawatan' : 'Tersedia';
+      await Car.findByIdAndUpdate(car._id, { stock: updatedStock, status: newStatus });
     }
   }
 
@@ -166,8 +159,7 @@ exports.validateBooking = asyncHandler(async (req, res, next) => {
     if (booking.car) {
       const car = await Car.findById(booking.car._id || booking.car);
       if (car && car.stock <= 0 && car.status !== 'Perawatan') {
-        car.status = 'Disewa';
-        await car.save();
+        await Car.findByIdAndUpdate(car._id, { status: 'Disewa' });
       }
     }
     
@@ -183,11 +175,9 @@ exports.validateBooking = asyncHandler(async (req, res, next) => {
     if (booking.car) {
       const car = await Car.findById(booking.car._id || booking.car);
       if (car) {
-        car.stock = (car.stock || 0) + 1;
-        if (car.status !== 'Perawatan') {
-          car.status = 'Tersedia';
-        }
-        await car.save();
+        const updatedStock = (car.stock || 0) + 1;
+        const newStatus = car.status === 'Perawatan' ? 'Perawatan' : 'Tersedia';
+        await Car.findByIdAndUpdate(car._id, { stock: updatedStock, status: newStatus });
       }
     }
     

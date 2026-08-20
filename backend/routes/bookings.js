@@ -50,11 +50,9 @@ router.post('/:id/return', auth, adminAuth, async (req, res) => {
 
     const car = await Car.findById(booking.car._id || booking.car);
     if (car) {
-      car.stock = (car.stock || 0) + 1;
-      if (car.status !== 'Perawatan') {
-        car.status = 'Tersedia';
-      }
-      await car.save();
+      const updatedStock = (car.stock || 0) + 1;
+      const newStatus = car.status === 'Perawatan' ? 'Perawatan' : 'Tersedia';
+      await Car.findByIdAndUpdate(car._id, { stock: updatedStock, status: newStatus });
     }
 
     res.json({ message: 'Pengembalian mobil berhasil dicatat & stok armada dipulihkan.', booking });

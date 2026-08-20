@@ -84,8 +84,7 @@ router.post('/notification', callbackLimiter, asyncHandler(async (req, res) => {
         
         const car = await Car.findById(booking.car);
         if (car && car.stock <= 0 && car.status !== 'Perawatan') {
-            car.status = 'Disewa';
-            await car.save();
+            await Car.findByIdAndUpdate(booking.car, { status: 'Disewa' });
         }
         
         await User.findByIdAndUpdate(booking.user, { $inc: { points: 250 } });
@@ -101,11 +100,9 @@ router.post('/notification', callbackLimiter, asyncHandler(async (req, res) => {
         
         const car = await Car.findById(booking.car);
         if (car) {
-            car.stock = (car.stock || 0) + 1;
-            if (car.status !== 'Perawatan') {
-                car.status = 'Tersedia';
-            }
-            await car.save();
+            const updatedStock = (car.stock || 0) + 1;
+            const newStatus = car.status === 'Perawatan' ? 'Perawatan' : 'Tersedia';
+            await Car.findByIdAndUpdate(car._id, { stock: updatedStock, status: newStatus });
         }
     }
 
@@ -147,8 +144,7 @@ router.post('/demo-confirm', auth, asyncHandler(async (req, res) => {
     
     const car = await Car.findById(booking.car);
     if (car && car.stock <= 0 && car.status !== 'Perawatan') {
-        car.status = 'Disewa';
-        await car.save();
+        await Car.findByIdAndUpdate(booking.car, { status: 'Disewa' });
     }
     
     await User.findByIdAndUpdate(booking.user, { $inc: { points: 250 } });

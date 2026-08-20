@@ -398,10 +398,20 @@ const AdminCarsPage = () => {
             {cars.length} Unit mobil terdaftar dalam sistem
           </p>
         </div>
-        <button onClick={handleAdd} className="btn btn-primary px-8 py-5 rounded-2xl group shadow-2xl shadow-primary/30 text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-3">
-          <span className="material-symbols-outlined text-lg">add_to_photos</span>
-          Tambah Mobil Baru
-        </button>
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={fetchCars} 
+            className="px-6 py-5 rounded-2xl border border-border bg-card hover:bg-muted text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 text-foreground transition-all active:scale-95 shadow-sm"
+            title="Segarkan data stok armada"
+          >
+            <span className="material-symbols-outlined text-lg">sync</span>
+            Segarkan Stok
+          </button>
+          <button onClick={handleAdd} className="btn btn-primary px-8 py-5 rounded-2xl group shadow-2xl shadow-primary/30 text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-3">
+            <span className="material-symbols-outlined text-lg">add_to_photos</span>
+            Tambah Mobil Baru
+          </button>
+        </div>
       </header>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">

@@ -26,6 +26,7 @@ const carValidation = [
   body('name').trim().notEmpty().withMessage('Car name is required'),
   body('pricePerDay').isFloat({ min: 0 }).withMessage('Price must be a positive number'),
   body('status').optional().isIn(['Tersedia', 'Disewa', 'Perawatan']).withMessage('Invalid status'),
+  body('stock').optional().isInt({ min: 0 }).withMessage('Stock must be 0 or greater'),
   body('year').optional().isInt({ min: 1900, max: new Date().getFullYear() + 1 }).withMessage('Invalid year')
 ];
 
