@@ -63,31 +63,53 @@ const CarFormModal = ({ car, onClose, onSave }) => {
     name: car?.name || '',
     brand: car?.brand || '',
     category: car?.category || 'Luxury Sedan',
-    year: car?.year || 2024,
+    year: car?.year || new Date().getFullYear(),
     pricePerDay: car?.pricePerDay || '',
     seats: car?.seats || 5,
     transmission: car?.transmission || 'Automatic',
     fuel: car?.fuel || 'Bensin',
     status: car?.status || 'Tersedia',
-    stock: car?.stock || 1,
+    stock: car?.stock ?? 1,
     imageUrl: car?.imageUrl || '',
+    features: car?.features && Array.isArray(car.features) ? car.features.join(', ') : (car?.features || ''),
   });
-  const [imageFile, setImageFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      setForm(prev => ({ ...prev, imageUrl: URL.createObjectURL(file) }));
+  const set = (field, value) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: '' }));
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setUploading(true);
-    await onSave(form, imageFile);
-    setUploading(false);
+  const validate = () => {
+    const e = {};
+    if (!form.name || !form.name.trim()) e.name = 'Nama mobil wajib diisi';
+    if (!form.brand || !form.brand.trim()) e.brand = 'Merk mobil wajib diisi';
+    if (!form.pricePerDay || isNaN(form.pricePerDay) || Number(form.pricePerDay) <= 0) e.pricePerDay = 'Harga sewa harus berupa angka positif';
+    if (!form.imageUrl || !form.imageUrl.trim()) e.imageUrl = 'URL Foto mobil wajib diisi';
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const handleSave = async () => {
+    if (!validate()) return;
+    setIsSaving(true);
+    const featuresArr = typeof form.features === 'string'
+      ? form.features.split(',').map((f) => f.trim()).filter(Boolean)
+      : (Array.isArray(form.features) ? form.features : []);
+    
+    await onSave({
+      ...form,
+      _id: car?._id || car?.id,
+      pricePerDay: Number(form.pricePerDay),
+      stock: Number(form.stock) || 1,
+      year: Number(form.year) || new Date().getFullYear(),
+      seats: Number(form.seats) || 5,
+      features: featuresArr,
+    });
+    setIsSaving(false);
   };
 
   return (
@@ -186,9 +208,15 @@ const CarFormModal = ({ car, onClose, onSave }) => {
 
         <footer className="flex items-center gap-4 px-10 py-8 border-t border-border bg-muted/10">
           <button onClick={onClose} className="flex-1 py-5 rounded-2xl border border-border text-muted-foreground font-black text-[10px] uppercase tracking-widest hover:bg-muted/50 transition-all">Batal</button>
-          <button onClick={handleSave} className="flex-[2] py-5 rounded-2xl bg-primary text-white font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-primary/20 hover:-translate-y-1 active:translate-y-0 transition-all">
-            <span className="material-symbols-outlined text-base">{isEdit ? 'verified' : 'add_task'}</span>
-            {isEdit ? 'Simpan Perubahan' : 'Tambah Mobil'}
+          <button onClick={handleSave} disabled={isSaving} className="flex-[2] py-5 rounded-2xl bg-primary text-white font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-primary/20 hover:-translate-y-1 active:translate-y-0 transition-all disabled:opacity-50">
+            {isSaving ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            ) : (
+              <>
+                <span className="material-symbols-outlined text-base">{isEdit ? 'verified' : 'add_task'}</span>
+                {isEdit ? 'Simpan Perubahan' : 'Tambah Mobil'}
+              </>
+            )}
           </button>
         </footer>
       </div>
@@ -206,9 +234,10 @@ const AdminCarsPage = () => {
 
   const fetchCars = async () => {
     try {
-      const response = await api.get('/cars');
-      const { data = [] } = response.data;
-      setCars(Array.isArray(data) ? data : []);
+      const response = await api.get('/cars?limit=100');
+      const responseData = response.data;
+      const list = Array.isArray(responseData) ? responseData : (responseData?.data || responseData?.cars || []);
+      setCars(list);
     } catch (err) {
       console.error('Failed to fetch cars:', err.message);
     } finally {
@@ -226,8 +255,9 @@ const AdminCarsPage = () => {
   const handleSaveCar = async (data) => {
     try {
       const isEdit = modal.type === 'edit';
-      if (isEdit) {
-        await api.put(`/cars/${data._id}`, data);
+      const carId = data._id || modal.car?._id || modal.car?.id;
+      if (isEdit && carId) {
+        await api.put(`/cars/${carId}`, data);
       } else {
         await api.post('/cars', data);
       }
@@ -235,29 +265,29 @@ const AdminCarsPage = () => {
       fetchCars();
       setModal(null);
     } catch (err) {
-      showToast(err.message, 'error');
+      showToast(err.response?.data?.error || err.message, 'error');
     }
   };
 
   const handleConfirmDelete = async () => {
     try {
-      await api.delete(`/cars/${modal.car._id}`);
+      await api.delete(`/cars/${modal.car._id || modal.car.id}`);
       showToast(`${modal.car.name} berhasil dihapus`, 'success');
       fetchCars();
       setModal(null);
     } catch (err) {
-      showToast(err.message, 'error');
+      showToast(err.response?.data?.error || err.message, 'error');
     }
   };
 
   const handleStatusToggle = async (car) => {
     try {
       const next = car.status === 'Tersedia' ? 'Perawatan' : 'Tersedia';
-      await api.put(`/cars/${car._id}`, { ...car, status: next });
+      await api.put(`/cars/${car._id || car.id}`, { ...car, status: next });
       showToast(`Status ${car.name} diubah menjadi ${next}`);
       fetchCars();
     } catch (err) {
-      showToast(err.message, 'error');
+      showToast(err.response?.data?.error || err.message, 'error');
     }
   };
 
