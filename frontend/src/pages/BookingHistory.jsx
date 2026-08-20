@@ -347,6 +347,7 @@ const BookingHistory = () => {
   const [bookings, setBookings] = useState([]);
   const [filter, setFilter] = useState('Semua');
   const [bookingToCancel, setBookingToCancel] = useState(null);
+  const [bookingToDelete, setBookingToDelete] = useState(null);
   const [validationModal, setValidationModal] = useState(null); // { booking, action: 'approve'|'reject' }
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [toast, setToast] = useState(null);
@@ -392,6 +393,17 @@ const BookingHistory = () => {
       showToast(err.response?.data?.error || err.message || 'Gagal membatalkan pesanan', 'error');
     }
     setBookingToCancel(null);
+  };
+
+  const handleDeletePermanent = async (booking) => {
+    try {
+      const res = await api.delete(`/bookings/${booking._id}`);
+      showToast(res.data?.message || 'Data transaksi berhasil dihapus');
+      fetchHistory();
+    } catch (err) {
+      showToast(err.response?.data?.error || err.message || 'Gagal menghapus data transaksi', 'error');
+    }
+    setBookingToDelete(null);
   };
 
   const handleValidateOrder = async (bookingId, action, notes) => {
@@ -579,8 +591,8 @@ const BookingHistory = () => {
                       </p>
                     </div>
                     
-                    <div className="flex items-center justify-between md:justify-end gap-6 pt-4 md:pt-0 border-t md:border-t-0 border-border">
-                      <div className="text-left md:text-right">
+                    <div className="flex items-center justify-between md:justify-end gap-3 pt-4 md:pt-0 border-t md:border-t-0 border-border">
+                      <div className="text-left md:text-right mr-2">
                         <p className="text-base font-black text-primary leading-none">Rp {(booking.totalPrice || booking.total || 0).toLocaleString('id-ID')}</p>
                         <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-1">Lunas (Paid)</p>
                       </div>
@@ -592,6 +604,26 @@ const BookingHistory = () => {
                         Detail
                         <span className="material-symbols-outlined text-base">chevron_right</span>
                       </button>
+
+                      {isAdmin ? (
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setBookingToDelete(booking); }}
+                          className="p-2 rounded-xl text-destructive/80 hover:text-destructive hover:bg-destructive/10 transition-all border border-border hover:border-destructive/30"
+                          title="Hapus / Batalkan Data Transaksi"
+                        >
+                          <span className="material-symbols-outlined text-lg">delete</span>
+                        </button>
+                      ) : (
+                        (booking.status === 'Pending Payment' || booking.status === 'Menunggu Konfirmasi') && (
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); setBookingToCancel(booking); }}
+                            className="p-2 rounded-xl text-destructive hover:bg-destructive/10 transition-all"
+                            title="Batalkan Pesanan"
+                          >
+                            <span className="material-symbols-outlined text-lg">cancel</span>
+                          </button>
+                        )
+                      )}
                     </div>
                   </div>
 
@@ -644,7 +676,45 @@ const BookingHistory = () => {
         </div>
       )}
 
-      {/* Cancel Confirmation */}
+      {/* Admin Delete Confirmation Modal */}
+      {bookingToDelete && createPortal(
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={() => setBookingToDelete(null)}>
+          <div className="bg-card rounded-[2.5rem] p-8 max-w-sm w-full border border-border shadow-2xl animate-zoom-in text-center space-y-6 relative z-10" onClick={(e) => e.stopPropagation()}>
+            <div className="w-16 h-16 rounded-3xl bg-destructive/10 flex items-center justify-center mx-auto shadow-inner text-destructive">
+              <span className="material-symbols-outlined text-3xl">delete_forever</span>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className="text-xl font-black text-foreground">Hapus Data Transaksi?</h3>
+              <p className="text-xs text-muted-foreground">
+                Pilih tindakan untuk pesanan <span className="font-bold text-foreground">#{bookingToDelete.orderId || bookingToDelete._id?.slice(-8).toUpperCase()}</span>.
+              </p>
+            </div>
+            <div className="flex flex-col gap-2.5">
+              <button 
+                onClick={() => handleDeletePermanent(bookingToDelete)} 
+                className="w-full py-3.5 rounded-2xl bg-destructive text-white font-black text-xs uppercase tracking-wider hover:opacity-90 transition-all shadow-lg shadow-destructive/20"
+              >
+                Hapus Permanen Dari Database
+              </button>
+              <button 
+                onClick={() => handleCancel(bookingToDelete)} 
+                className="w-full py-3.5 rounded-2xl bg-amber-500/10 text-amber-500 border border-amber-500/20 font-black text-xs uppercase tracking-wider hover:bg-amber-500 hover:text-white transition-all"
+              >
+                Ubah Status Jadi Dibatalkan
+              </button>
+              <button 
+                onClick={() => setBookingToDelete(null)} 
+                className="w-full py-3.5 rounded-2xl bg-muted text-foreground font-black text-xs uppercase tracking-wider hover:bg-muted/70 transition-all"
+              >
+                Batal
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Customer Cancel Confirmation */}
       {bookingToCancel && createPortal(
         <div className="fixed inset-0 z-[99999] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={() => setBookingToCancel(null)}>
           <div className="bg-card rounded-[2.5rem] p-10 max-w-sm w-full border border-border shadow-2xl animate-zoom-in text-center space-y-6 relative z-10" onClick={(e) => e.stopPropagation()}>

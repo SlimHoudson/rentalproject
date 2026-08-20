@@ -86,11 +86,9 @@ exports.getAllBookings = asyncHandler(async (req, res, next) => {
 });
 
 exports.cancelBooking = asyncHandler(async (req, res, next) => {
-  const booking = await Booking.findOne({ _id: req.params.id, user: req.user.id });
-  if (!booking) return res.status(404).json({ error: 'Booking not found' });
-  if (booking.status !== 'Aktif' && booking.status !== 'Pending Payment') {
-      return res.status(400).json({ error: 'Hanya pesanan aktif atau pending yang bisa dibatalkan.' });
-  }
+  const query = req.user.role === 'admin' ? { _id: req.params.id } : { _id: req.params.id, user: req.user.id };
+  const booking = await Booking.findOne(query);
+  if (!booking) return res.status(404).json({ error: 'Pesanan tidak ditemukan.' });
 
   booking.status = 'Dibatalkan';
   booking.paymentStatus = 'failed';
@@ -102,7 +100,22 @@ exports.cancelBooking = asyncHandler(async (req, res, next) => {
     await car.save();
   }
 
-  res.json({ message: 'Booking cancelled successfully', booking });
+  res.json({ message: 'Pesanan berhasil dibatalkan.', booking });
+});
+
+// Admin Permanent Delete Booking
+exports.deleteBooking = asyncHandler(async (req, res, next) => {
+  const booking = await Booking.findById(req.params.id);
+  if (!booking) {
+    return res.status(404).json({ error: 'Pesanan tidak ditemukan.' });
+  }
+
+  if (booking.car && (booking.status === 'Aktif' || booking.status === 'Menunggu Konfirmasi')) {
+    await Car.findByIdAndUpdate(booking.car, { status: 'Tersedia' });
+  }
+
+  await Booking.findByIdAndDelete(req.params.id);
+  res.json({ message: 'Data transaksi berhasil dihapus secara permanen.' });
 });
 
 // Admin Validation (Shopee Style: Approve / Reject with Notes)
