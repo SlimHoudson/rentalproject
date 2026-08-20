@@ -34,18 +34,18 @@ const ReceiptModal = ({ booking, onClose, user }) => {
           <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/20 shadow-xl">
             <span className="material-symbols-outlined text-white text-3xl">receipt_long</span>
           </div>
-          <h2 className="font-black text-xl tracking-tight uppercase">Luxury Receipt</h2>
-          <p className="text-white/60 text-[10px] font-black tracking-[0.2em] uppercase mt-1">Transaction Verified</p>
+          <h2 className="font-black text-xl tracking-tight uppercase">Bukti Transaksi</h2>
+          <p className="text-white/60 text-[10px] font-black tracking-[0.2em] uppercase mt-1">Transaksi Terverifikasi</p>
         </div>
 
         <div className="p-8 space-y-6">
           <div className="flex justify-between items-end border-b border-border pb-6">
             <div className="space-y-1">
-              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest leading-none">Receipt ID</p>
+              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest leading-none">No. Pesanan</p>
               <p className="text-sm font-bold text-foreground font-mono">#{booking._id?.slice(-8).toUpperCase() || 'N/A'}</p>
             </div>
             <div className="text-right space-y-1">
-              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest leading-none">Date Issued</p>
+              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest leading-none">Tanggal Terbit</p>
               <p className="text-sm font-bold text-foreground">{formatDate(new Date())}</p>
             </div>
           </div>
@@ -61,26 +61,26 @@ const ReceiptModal = ({ booking, onClose, user }) => {
 
             <div className="grid grid-cols-2 gap-4 py-2">
               <div className="space-y-1">
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Customer</p>
-                <p className="text-xs font-bold text-foreground">{booking.user?.name || user?.name || 'User'}</p>
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Pelanggan</p>
+                <p className="text-xs font-bold text-foreground">{booking.user?.name || user?.name || 'Pelanggan'}</p>
               </div>
               <div className="space-y-1 text-right">
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Duration</p>
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Durasi Sewa</p>
                 <p className="text-xs font-bold text-primary">{getDuration()}</p>
               </div>
             </div>
 
             <div className="space-y-3 pt-2">
               <div className="flex justify-between text-xs font-medium">
-                <span className="text-muted-foreground italic">Base Rental Fee</span>
+                <span className="text-muted-foreground italic">Biaya Sewa Pokok</span>
                 <span className="text-foreground font-bold">Rp {(booking.totalPrice - 150000).toLocaleString('id-ID')}</span>
               </div>
               <div className="flex justify-between text-xs font-medium">
-                <span className="text-muted-foreground italic">Premium Protection & Service</span>
+                <span className="text-muted-foreground italic">Asuransi & Proteksi Layanan</span>
                 <span className="text-foreground font-bold">Rp {(150000).toLocaleString('id-ID')}</span>
               </div>
               <div className="pt-4 mt-2 border-t border-border flex justify-between items-center">
-                <span className="text-sm font-black uppercase tracking-widest text-foreground">Total Paid</span>
+                <span className="text-sm font-black uppercase tracking-widest text-foreground">Total Dibayar</span>
                 <span className="text-xl font-black text-primary">Rp {(booking.totalPrice || 0).toLocaleString('id-ID')}</span>
               </div>
             </div>
@@ -101,7 +101,7 @@ const ReceiptModal = ({ booking, onClose, user }) => {
           onClick={onClose}
           className="w-full p-6 bg-muted/30 text-xs font-black uppercase tracking-widest text-muted-foreground hover:bg-muted transition-colors border-t border-border"
         >
-          Close Receipt
+          Tutup Kuitansi
         </button>
       </div>
     </div>
@@ -157,7 +157,7 @@ const BookingHistory = () => {
   const handleCancel = async (booking) => {
     try {
       await api.post(`/bookings/${booking._id}/cancel`);
-      showToast('Reservation Cancelled Successfully');
+      showToast('Pemesanan Berhasil Dibatalkan');
       
       // Re-fetch
       const isAdminView = window.location.pathname.includes('/admin/');
@@ -166,7 +166,7 @@ const BookingHistory = () => {
       const data = res.data;
       setBookings(Array.isArray(data) ? data : (data.data || []));
     } catch (err) {
-      showToast(err.message || 'Failed to cancel', 'error');
+      showToast(err.message || 'Gagal membatalkan pesanan', 'error');
     }
     setBookingToCancel(null);
   };
@@ -182,8 +182,8 @@ const BookingHistory = () => {
     <div className="p-6 lg:p-12 space-y-10 animate-fade-in max-w-5xl mx-auto">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h2 className="text-4xl font-black tracking-tight text-foreground">Transaction History</h2>
-          <p className="text-muted-foreground mt-2">Manage and monitor your premium car reservations.</p>
+          <h2 className="text-4xl font-black tracking-tight text-foreground">Riwayat Transaksi</h2>
+          <p className="text-muted-foreground mt-2">Pantau dan kelola riwayat pemesanan mobil Anda.</p>
         </div>
         
         <div className="flex gap-2 p-1.5 bg-muted/30 border border-border rounded-2xl overflow-x-auto no-scrollbar">
@@ -193,7 +193,7 @@ const BookingHistory = () => {
               onClick={() => setFilter(f)}
               className={`px-6 py-2 rounded-xl text-xs font-black tracking-widest uppercase whitespace-nowrap transition-all ${filter === f ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-muted-foreground hover:text-foreground'}`}
             >
-              {f}
+              {f === 'Pending Payment' ? 'Menunggu Bayar' : f}
             </button>
           ))}
         </div>
@@ -213,10 +213,10 @@ const BookingHistory = () => {
                 <span className="material-symbols-outlined text-4xl opacity-20">receipt_long</span>
               </div>
               <div className="space-y-2">
-                <p className="text-foreground font-black uppercase tracking-widest">No Records Found</p>
-                <p className="text-muted-foreground text-sm">You haven't made any reservations yet.</p>
+                <p className="text-foreground font-black uppercase tracking-widest">Tidak Ada Riwayat</p>
+                <p className="text-muted-foreground text-sm">Anda belum memiliki riwayat pemesanan rental mobil.</p>
               </div>
-              <button onClick={() => navigate('/cars')} className="btn btn-primary px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest">Explore Fleet</button>
+              <button onClick={() => navigate('/cars')} className="btn btn-primary px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest">Jelajahi Armada</button>
             </div>
           ) : (
             filtered.map((booking, idx) => (
@@ -239,25 +239,25 @@ const BookingHistory = () => {
                         booking.status === 'Pending Payment' ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
                         'bg-primary/10 text-primary border-primary/20'
                       }`}>
-                        {booking.status}
+                        {booking.status === 'Pending Payment' ? 'Menunggu Bayar' : booking.status}
                       </span>
                     </div>
                     <div className="flex items-center gap-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                       <span>{formatDate(booking.startDate)} — {formatDate(booking.endDate)}</span>
-                      <span className="text-primary/60">({booking.days || 1} Days)</span>
+                      <span className="text-primary/60">({booking.days || 1} Hari)</span>
                     </div>
                   </div>
                   
                   <div className="flex items-center justify-between md:justify-end gap-6 pt-4 md:pt-0 border-t md:border-t-0 border-border">
                     <div className="text-left md:text-right">
                       <p className="text-sm font-black text-primary leading-none">Rp {(booking.totalPrice || booking.total || 0).toLocaleString('id-ID')}</p>
-                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-tighter mt-1">Total Payment</p>
+                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-tighter mt-1">Total Pembayaran</p>
                     </div>
                     {booking.status !== 'Dibatalkan' && booking.status !== 'Selesai' && (
                       <button 
                         onClick={(e) => { e.stopPropagation(); setBookingToCancel(booking); }}
                         className="p-2.5 rounded-xl text-destructive hover:bg-destructive/10 transition-all"
-                        title="Cancel Booking"
+                        title="Batalkan Pesanan"
                       >
                         <span className="material-symbols-outlined text-xl">cancel</span>
                       </button>
@@ -279,12 +279,12 @@ const BookingHistory = () => {
               <span className="material-symbols-outlined text-4xl">warning</span>
             </div>
             <div className="space-y-2">
-              <h3 className="text-2xl font-black text-foreground">Cancel Booking?</h3>
-              <p className="text-sm text-muted-foreground">Are you sure you want to cancel this reservation? This action cannot be undone.</p>
+              <h3 className="text-2xl font-black text-foreground">Batalkan Pesanan?</h3>
+              <p className="text-sm text-muted-foreground">Apakah Anda yakin ingin membatalkan pemesanan ini? Tindakan ini tidak dapat dibatalkan.</p>
             </div>
             <div className="flex flex-col gap-3">
-              <button onClick={() => handleCancel(bookingToCancel)} className="w-full py-4 rounded-2xl bg-destructive text-white font-black hover:opacity-90 transition-all shadow-xl shadow-destructive/20">Yes, Cancel Reservation</button>
-              <button onClick={() => setBookingToCancel(null)} className="w-full py-4 rounded-2xl bg-muted text-foreground font-black hover:bg-muted transition-all">Keep Reservation</button>
+              <button onClick={() => handleCancel(bookingToCancel)} className="w-full py-4 rounded-2xl bg-destructive text-white font-black hover:opacity-90 transition-all shadow-xl shadow-destructive/20">Ya, Batalkan Pesanan</button>
+              <button onClick={() => setBookingToCancel(null)} className="w-full py-4 rounded-2xl bg-muted text-foreground font-black hover:bg-muted transition-all">Pertahankan Pesanan</button>
             </div>
           </div>
         </div>

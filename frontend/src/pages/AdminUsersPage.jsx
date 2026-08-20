@@ -58,7 +58,7 @@ const AdminUsersPage = () => {
             <div className="min-h-[80vh] flex items-center justify-center">
                 <div className="flex flex-col items-center gap-6">
                     <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">Syncing User Registry</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">Memuat Data Pengguna...</p>
                 </div>
             </div>
         );
@@ -68,13 +68,13 @@ const AdminUsersPage = () => {
         <div className="p-6 lg:p-12 space-y-12 animate-fade-in max-w-[1600px] mx-auto">
             <header className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                 <div className="space-y-2">
-                    <h2 className="text-4xl font-black tracking-tight text-foreground uppercase">Identity Management</h2>
+                    <h2 className="text-4xl font-black tracking-tight text-foreground uppercase">Manajemen Pelanggan</h2>
                     <p className="text-muted-foreground font-medium flex items-center gap-3">
                         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20">
                             <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-                            Active Registry
+                            Pengguna Aktif
                         </span>
-                        {users.length} verified identities within the sanctuary
+                        {users.length} akun terdaftar dalam sistem
                     </p>
                 </div>
             </header>
@@ -84,14 +84,14 @@ const AdminUsersPage = () => {
                     <div className="relative w-full lg:w-96 group">
                         <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground/50 group-focus-within:text-primary transition-colors">person_search</span>
                         <input 
-                            className="w-full pl-14 pr-6 py-4 rounded-2xl text-xs font-bold border border-border bg-muted/30 outline-none focus:bg-card focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all uppercase tracking-widest" 
-                            placeholder="Scan identities..." 
+                            className="w-full pl-14 pr-6 py-4 rounded-2xl text-xs font-bold border border-border bg-muted/30 outline-none focus:bg-card focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all tracking-wide" 
+                            placeholder="Cari nama atau email..." 
                             value={search} 
                             onChange={(e) => setSearch(e.target.value)} 
                         />
                     </div>
                     <div className="ml-auto text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
-                        Syncing {filteredUsers.length} entries
+                        Menampilkan {filteredUsers.length} data
                     </div>
                 </header>
 
@@ -99,10 +99,10 @@ const AdminUsersPage = () => {
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-muted/5 border-b border-border">
-                                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Entity Profile</th>
-                                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Protocol Authority</th>
-                                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Registry Date</th>
-                                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground text-right">Administrative</th>
+                                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Profil Pengguna</th>
+                                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Peran / Role</th>
+                                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Tanggal Daftar</th>
+                                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-border">
@@ -111,7 +111,7 @@ const AdminUsersPage = () => {
                                     <td colSpan="4" className="py-24 text-center">
                                         <div className="flex flex-col items-center gap-6 opacity-20">
                                             <span className="material-symbols-outlined text-7xl">face_retouching_off</span>
-                                            <p className="text-[10px] font-black uppercase tracking-[0.3em]">No matching entities found</p>
+                                            <p className="text-[10px] font-black uppercase tracking-[0.3em]">Tidak ada data pengguna ditemukan</p>
                                         </div>
                                     </td>
                                 </tr>
@@ -136,14 +136,14 @@ const AdminUsersPage = () => {
                                                     u.role === 'admin' ? 'bg-primary/10 text-primary border-primary/20' : 'bg-muted text-muted-foreground border-border'
                                                 }`}
                                             >
-                                                {u.role}
+                                                {u.role === 'admin' ? 'Admin' : 'Pelanggan'}
                                             </button>
                                         </td>
                                         <td className="px-8 py-6">
                                             <div className="flex items-center gap-3 text-muted-foreground">
                                                 <span className="material-symbols-outlined text-sm">event</span>
                                                 <span className="text-[11px] font-black uppercase tracking-widest">
-                                                    {new Date(u.createdAt).toLocaleDateString('en-US', {
+                                                    {new Date(u.createdAt).toLocaleDateString('id-ID', {
                                                         year: 'numeric',
                                                         month: 'short',
                                                         day: '2-digit'
@@ -155,6 +155,7 @@ const AdminUsersPage = () => {
                                             <button
                                                 onClick={() => setModal({ type: 'delete', user: u })}
                                                 className="w-10 h-10 rounded-2xl bg-card border border-border text-destructive shadow-xl hover:bg-destructive/10 transition-all flex items-center justify-center ml-auto opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0"
+                                                title="Hapus Pengguna"
                                             >
                                                 <span className="material-symbols-outlined text-base">person_remove</span>
                                             </button>
@@ -175,12 +176,12 @@ const AdminUsersPage = () => {
                             <span className="material-symbols-outlined text-4xl text-destructive">warning</span>
                         </div>
                         <div className="space-y-2">
-                            <h3 className="text-2xl font-black text-foreground tracking-tight uppercase">Purge Entity?</h3>
-                            <p className="text-muted-foreground text-sm font-medium">You are about to remove <span className="text-foreground font-black tracking-tight">{modal.user.name}</span> from the sanctuary registry.</p>
+                            <h3 className="text-2xl font-black text-foreground tracking-tight uppercase">Hapus Pengguna?</h3>
+                            <p className="text-muted-foreground text-sm font-medium">Anda akan menghapus akun <span className="text-foreground font-black tracking-tight">{modal.user.name}</span> dari sistem database.</p>
                         </div>
                         <div className="flex gap-4">
-                            <button onClick={() => setModal(null)} className="flex-1 py-4 rounded-2xl border border-border text-muted-foreground font-black text-[10px] uppercase tracking-widest hover:bg-muted/50 transition-all">Abort</button>
-                            <button onClick={handleDeleteUser} className="flex-1 py-4 rounded-2xl bg-destructive text-white font-black text-[10px] uppercase tracking-widest hover:brightness-110 shadow-2xl shadow-destructive/20 transition-all">Authorize Purge</button>
+                            <button onClick={() => setModal(null)} className="flex-1 py-4 rounded-2xl border border-border text-muted-foreground font-black text-[10px] uppercase tracking-widest hover:bg-muted/50 transition-all">Batal</button>
+                            <button onClick={handleDeleteUser} className="flex-1 py-4 rounded-2xl bg-destructive text-white font-black text-[10px] uppercase tracking-widest hover:brightness-110 shadow-2xl shadow-destructive/20 transition-all">Ya, Hapus</button>
                         </div>
                     </div>
                 </div>
@@ -193,12 +194,12 @@ const AdminUsersPage = () => {
                             <span className="material-symbols-outlined text-4xl text-primary">security</span>
                         </div>
                         <div className="space-y-2">
-                            <h3 className="text-2xl font-black text-foreground tracking-tight uppercase">Authority Override</h3>
-                            <p className="text-muted-foreground text-sm font-medium">Elevate or revoke authority for <span className="text-foreground font-black tracking-tight">{modal.user.name}</span>?</p>
+                            <h3 className="text-2xl font-black text-foreground tracking-tight uppercase">Ubah Peran Pengguna</h3>
+                            <p className="text-muted-foreground text-sm font-medium">Ubah peran untuk <span className="text-foreground font-black tracking-tight">{modal.user.name}</span> menjadi {modal.user.role === 'admin' ? 'Pelanggan (User)' : 'Admin'}?</p>
                         </div>
                         <div className="flex gap-4">
-                            <button onClick={() => setModal(null)} className="flex-1 py-4 rounded-2xl border border-border text-muted-foreground font-black text-[10px] uppercase tracking-widest hover:bg-muted/50 transition-all">Cancel</button>
-                            <button onClick={handleChangeRole} className="flex-1 py-4 rounded-2xl bg-primary text-white font-black text-[10px] uppercase tracking-widest hover:brightness-110 shadow-2xl shadow-primary/20 transition-all">Confirm Change</button>
+                            <button onClick={() => setModal(null)} className="flex-1 py-4 rounded-2xl border border-border text-muted-foreground font-black text-[10px] uppercase tracking-widest hover:bg-muted/50 transition-all">Batal</button>
+                            <button onClick={handleChangeRole} className="flex-1 py-4 rounded-2xl bg-primary text-white font-black text-[10px] uppercase tracking-widest hover:brightness-110 shadow-2xl shadow-primary/20 transition-all">Konfirmasi</button>
                         </div>
                     </div>
                 </div>

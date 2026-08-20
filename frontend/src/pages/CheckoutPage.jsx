@@ -182,8 +182,8 @@ const CheckoutPage = () => {
       {/* Progress Steps */}
       <div className="flex items-center justify-center gap-4">
         {[
-          { id: 1, label: 'Review' },
-          { id: 2, label: 'Payment' }
+          { id: 1, label: 'Rincian Pesanan' },
+          { id: 2, label: 'Pembayaran' }
         ].map((s, i) => (
           <React.Fragment key={s.id}>
             <div className="flex items-center gap-3">
@@ -202,8 +202,8 @@ const CheckoutPage = () => {
           {step === 1 ? (
             <div className="space-y-8 animate-slide-up">
               <header>
-                <h1 className="text-4xl font-black tracking-tight">Review Reservation</h1>
-                <p className="text-muted-foreground mt-2">Verify your luxury car selection and itinerary.</p>
+                <h1 className="text-4xl font-black tracking-tight">Rincian Pemesanan</h1>
+                <p className="text-muted-foreground mt-2">Periksa kembali mobil pilihan dan jadwal sewa Anda.</p>
               </header>
 
               <div className="card space-y-8">
@@ -216,11 +216,11 @@ const CheckoutPage = () => {
                     </div>
                     <div className="flex flex-wrap gap-3">
                       <div className="px-4 py-2 bg-muted/30 rounded-xl border border-border/50">
-                        <p className="text-[9px] font-black text-muted-foreground uppercase mb-1">Duration</p>
-                        <p className="text-sm font-black text-foreground">{booking.days} Days</p>
+                        <p className="text-[9px] font-black text-muted-foreground uppercase mb-1">Durasi Sewa</p>
+                        <p className="text-sm font-black text-foreground">{booking.days} Hari</p>
                       </div>
                       <div className="px-4 py-2 bg-muted/30 rounded-xl border border-border/50">
-                        <p className="text-[9px] font-black text-muted-foreground uppercase mb-1">Pickup Point</p>
+                        <p className="text-[9px] font-black text-muted-foreground uppercase mb-1">Titik Jemput</p>
                         <p className="text-sm font-black text-foreground">{booking.pickup}</p>
                       </div>
                     </div>
@@ -229,14 +229,14 @@ const CheckoutPage = () => {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-border">
                   <div className="space-y-2">
-                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] ml-1">Departure</p>
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] ml-1">Mulai Sewa</p>
                     <div className="p-5 bg-muted/20 rounded-2xl border border-border/50 flex items-center gap-4">
                       <span className="material-symbols-outlined text-primary">event_upcoming</span>
                       <span className="font-bold text-sm">{new Date(booking.startDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] ml-1">Arrival</p>
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] ml-1">Selesai Sewa</p>
                     <div className="p-5 bg-muted/20 rounded-2xl border border-border/50 flex items-center gap-4">
                       <span className="material-symbols-outlined text-primary">event_available</span>
                       <span className="font-bold text-sm">{new Date(booking.endDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
@@ -250,27 +250,27 @@ const CheckoutPage = () => {
                 className="flex items-center gap-2 text-destructive hover:opacity-70 transition-all font-black text-[10px] uppercase tracking-widest"
               >
                 <span className="material-symbols-outlined text-lg">delete</span>
-                Cancel Reservation
+                Batalkan Pemesanan
               </button>
             </div>
           ) : (
             <div className="space-y-8 animate-slide-up">
               <header className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-4xl font-black tracking-tight">Payment Method</h1>
-                  <p className="text-muted-foreground mt-2">Select your preferred secure payment gateway.</p>
+                  <h1 className="text-4xl font-black tracking-tight">Metode Pembayaran</h1>
+                  <p className="text-muted-foreground mt-2">Pilih metode pembayaran aman yang Anda inginkan.</p>
                 </div>
                 <button onClick={() => setStep(1)} className="flex items-center gap-2 px-5 py-3 rounded-2xl hover:bg-muted text-xs font-black uppercase tracking-widest transition-all">
                   <span className="material-symbols-outlined text-base">arrow_back</span>
-                  Review
+                  Kembali
                 </button>
               </header>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[
-                  { id: 'va', label: 'Virtual Account', sub: 'BCA, Mandiri, BNI, BRI', icon: 'account_balance' },
-                  { id: 'ewallet', label: 'Digital Wallet', sub: 'GoPay, OVO, DANA, Shopee', icon: 'account_balance_wallet' },
-                  { id: 'qris', label: 'QRIS Scan', sub: 'Universal QR Standard', icon: 'qr_code_scanner' },
+                  { id: 'va', label: 'Virtual Account Bank', sub: 'BCA, Mandiri, BNI, BRI', icon: 'account_balance' },
+                  { id: 'ewallet', label: 'Dompet Digital (E-Wallet)', sub: 'GoPay, OVO, DANA, ShopeePay', icon: 'account_balance_wallet' },
+                  { id: 'qris', label: 'QRIS Scan', sub: 'Standar QR Nasional (BCA, GoPay, dll)', icon: 'qr_code_scanner' },
                 ].map(method => (
                   <button 
                     key={method.id}
@@ -298,8 +298,8 @@ const CheckoutPage = () => {
                       <span className="material-symbols-outlined text-3xl">stars</span>
                     </div>
                     <div>
-                      <h4 className="text-lg font-black tracking-tight">Redeem Loyalty Points</h4>
-                      <p className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] mt-1">Available: {user?.points?.toLocaleString()} Points</p>
+                      <h4 className="text-lg font-black tracking-tight">Gunakan Poin Loyalitas</h4>
+                      <p className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] mt-1">Tersedia: {user?.points?.toLocaleString('id-ID')} Poin</p>
                     </div>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
@@ -316,20 +316,20 @@ const CheckoutPage = () => {
         <div className="lg:col-span-4 lg:sticky lg:top-28">
           <div className="card !p-0 overflow-hidden shadow-2xl border-primary/20 flex flex-col h-fit">
             <div className="p-8 space-y-8">
-              <h3 className="text-xl font-black uppercase tracking-widest text-foreground">Booking Summary</h3>
+              <h3 className="text-xl font-black uppercase tracking-widest text-foreground">Rincian Pembayaran</h3>
               
               <div className="space-y-4">
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-muted-foreground font-medium italic">Standard Rental Fee</span>
+                  <span className="text-muted-foreground font-medium italic">Biaya Sewa Pokok ({booking.days} Hari)</span>
                   <span className="font-black text-foreground">Rp {subtotal.toLocaleString('id-ID')}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-muted-foreground font-medium italic">Premium Protection</span>
+                  <span className="text-muted-foreground font-medium italic">Asuransi & Proteksi Layanan</span>
                   <span className="font-black text-foreground">Rp {insurance.toLocaleString('id-ID')}</span>
                 </div>
                 {usePoints && (
                   <div className="flex justify-between items-center text-sm p-3 bg-green-500/10 rounded-xl border border-green-500/20">
-                    <span className="text-green-500 font-black uppercase tracking-widest text-[10px]">Loyalty Discount</span>
+                    <span className="text-green-500 font-black uppercase tracking-widest text-[10px]">Diskon Poin</span>
                     <span className="font-black text-green-500">- Rp {discountAmount.toLocaleString('id-ID')}</span>
                   </div>
                 )}
@@ -337,7 +337,7 @@ const CheckoutPage = () => {
 
               <div className="pt-6 border-t border-border space-y-2">
                 <div className="flex justify-between items-end">
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Amount Due</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Total Tagihan</span>
                   <span className="text-4xl font-black text-primary tracking-tighter">Rp {total.toLocaleString('id-ID')}</span>
                 </div>
               </div>
@@ -357,7 +357,7 @@ const CheckoutPage = () => {
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                 ) : (
                   <>
-                    {step === 1 ? 'Go to Payment' : 'Secure Checkout'}
+                    {step === 1 ? 'Lanjut ke Pembayaran' : 'Bayar Sekarang'}
                     <span className="material-symbols-outlined text-lg">{step === 1 ? 'arrow_forward' : 'lock'}</span>
                   </>
                 )}
@@ -366,7 +366,7 @@ const CheckoutPage = () => {
             
             <div className="p-4 bg-muted/30 flex items-center justify-center gap-3 border-t border-border">
               <span className="material-symbols-outlined text-primary text-base">verified_user</span>
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Certified Encryption Active</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Transaksi Terenkripsi & Aman</span>
             </div>
           </div>
         </div>
@@ -380,12 +380,12 @@ const CheckoutPage = () => {
               <span className="material-symbols-outlined text-4xl">warning</span>
             </div>
             <div className="space-y-2">
-              <h3 className="text-2xl font-black text-foreground">Discard Booking?</h3>
-              <p className="text-sm text-muted-foreground">All progress will be lost and you will be returned to the fleet gallery.</p>
+              <h3 className="text-2xl font-black text-foreground">Batalkan Pesanan?</h3>
+              <p className="text-sm text-muted-foreground">Proses pemesanan ini akan dibatalkan dan Anda akan diarahkan kembali ke katalog armada.</p>
             </div>
             <div className="flex flex-col gap-3">
-              <button onClick={handleCancelOrder} className="w-full py-4 rounded-2xl bg-destructive text-white font-black hover:opacity-90 transition-all shadow-xl shadow-destructive/20">Yes, Discard</button>
-              <button onClick={() => setShowCancelConfirm(false)} className="w-full py-4 rounded-2xl bg-muted text-foreground font-black hover:bg-muted transition-all">Keep Reviewing</button>
+              <button onClick={handleCancelOrder} className="w-full py-4 rounded-2xl bg-destructive text-white font-black hover:opacity-90 transition-all shadow-xl shadow-destructive/20">Ya, Batalkan</button>
+              <button onClick={() => setShowCancelConfirm(false)} className="w-full py-4 rounded-2xl bg-muted text-foreground font-black hover:bg-muted transition-all">Lanjutkan Pesanan</button>
             </div>
           </div>
         </div>
@@ -399,11 +399,11 @@ const CheckoutPage = () => {
               <span className="material-symbols-outlined text-4xl">sim_card</span>
             </div>
             <div className="space-y-2">
-              <h2 className="text-3xl font-black text-foreground">Payment Simulator</h2>
-              <p className="text-sm text-muted-foreground">This is a sandbox environment. No actual charges will be made to your account.</p>
+              <h2 className="text-3xl font-black text-foreground">Simulator Pembayaran</h2>
+              <p className="text-sm text-muted-foreground">Ini adalah lingkungan simulasi / uji coba. Saldo rekening Anda tidak akan terpotong.</p>
             </div>
             <div className="p-6 bg-muted/30 rounded-[2rem] border border-border space-y-1">
-               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Amount to Pay</p>
+               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Total yang Dibayar</p>
                <p className="text-3xl font-black text-primary">Rp {total.toLocaleString('id-ID')}</p>
             </div>
             <div className="space-y-3 pt-2">
@@ -412,9 +412,9 @@ const CheckoutPage = () => {
                 disabled={isProcessing}
                 className="w-full py-5 rounded-2xl bg-zinc-900 text-white font-black text-xs uppercase tracking-[0.2em] hover:bg-zinc-800 transition-all shadow-xl"
               >
-                {isProcessing ? 'Verifying...' : 'Authorize Transaction'}
+                {isProcessing ? 'Memproses...' : 'Konfirmasi Simulasi Pembayaran'}
               </button>
-              <button onClick={() => setShowDemoMidtrans(false)} className="text-muted-foreground text-[10px] font-black uppercase tracking-widest hover:text-foreground transition-colors">Abort Transaction</button>
+              <button onClick={() => setShowDemoMidtrans(false)} className="text-muted-foreground text-[10px] font-black uppercase tracking-widest hover:text-foreground transition-colors">Tutup Simulator</button>
             </div>
           </div>
         </div>
@@ -431,14 +431,14 @@ const CheckoutPage = () => {
               <span className="material-symbols-outlined text-7xl font-bold">verified</span>
             </div>
             <div className="space-y-4">
-              <h2 className="text-5xl font-black tracking-tighter uppercase">Reservation Confirmed</h2>
-              <p className="text-white/60 text-lg font-medium leading-relaxed">Prepare for excellence. Your <span className="text-white font-black">{booking.car.name}</span> is being prepared for your journey.</p>
+              <h2 className="text-5xl font-black tracking-tighter uppercase">Pemesanan Berhasil</h2>
+              <p className="text-white/60 text-lg font-medium leading-relaxed">Terima kasih. Mobil <span className="text-white font-black">{booking.car.name}</span> Anda siap disiapkan untuk perjalanan terbaik Anda.</p>
             </div>
             <div className="pt-8">
               <div className="w-64 mx-auto h-1 bg-white/10 rounded-full overflow-hidden">
                 <div className="bg-primary h-full animate-[progress_3s_linear]"></div>
               </div>
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mt-6 animate-pulse">Synchronizing Ledger...</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mt-6 animate-pulse">Mengalihkan ke riwayat pesanan...</p>
             </div>
           </div>
         </div>

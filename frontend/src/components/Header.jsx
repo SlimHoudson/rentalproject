@@ -17,15 +17,15 @@ const Header = ({ title }) => {
   const isActive = (path) => location.pathname === path || location.pathname.startsWith(path + '/');
 
   const menuItems = isAdmin ? [
-    { to: '/admin/dashboard', label: 'Overview' },
-    { to: '/admin/cars', label: 'Inventory' },
-    { to: '/admin/bookings', label: 'Orders' },
-    { to: '/admin/users', label: 'Customers' },
-    { to: '/admin/chat', label: 'Support' },
+    { to: '/admin/dashboard', label: 'Ringkasan' },
+    { to: '/admin/cars', label: 'Armada' },
+    { to: '/admin/bookings', label: 'Transaksi' },
+    { to: '/admin/users', label: 'Pelanggan' },
+    { to: '/admin/chat', label: 'Pesan & Bantuan' },
   ] : [
-    { to: '/dashboard', label: 'Overview' },
-    { to: '/cars', label: 'Explore' },
-    { to: '/history', label: 'My Bookings' },
+    { to: '/dashboard', label: 'Ringkasan' },
+    { to: '/cars', label: 'Katalog Mobil' },
+    { to: '/history', label: 'Pesanan Saya' },
   ];
 
   useEffect(() => {
@@ -88,7 +88,7 @@ const Header = ({ title }) => {
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
               <span className="material-symbols-outlined text-white text-base">directions_car</span>
             </div>
-            <span className="text-sm font-black tracking-tight text-foreground uppercase hidden sm:block">LuxeDrive</span>
+            <span className="text-sm font-black tracking-tight text-foreground uppercase hidden sm:block">Bahrayyan Rental</span>
           </Link>
 
           <nav className="hidden lg:flex items-center gap-1">
@@ -114,7 +114,7 @@ const Header = ({ title }) => {
             <button
               onClick={toggleTheme}
               className="p-1.5 rounded-full text-muted-foreground hover:text-foreground transition-all"
-              title="Toggle Theme"
+              title="Ganti Tema"
             >
               <span className="material-symbols-outlined text-[20px]">{isDark ? 'light_mode' : 'dark_mode'}</span>
             </button>
@@ -125,6 +125,7 @@ const Header = ({ title }) => {
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
                 className="p-1.5 rounded-full text-muted-foreground hover:text-foreground transition-all relative"
+                title="Notifikasi"
               >
                 <span className="material-symbols-outlined text-[20px]">notifications</span>
                 {unreadCount > 0 && (
@@ -135,14 +136,14 @@ const Header = ({ title }) => {
               {showNotifications && (
                 <div className="absolute right-[-40px] top-12 w-80 bg-card border border-border rounded-2xl shadow-2xl overflow-hidden animate-slide-up">
                   <div className="px-5 py-4 border-b border-border flex justify-between items-center bg-muted/20">
-                    <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Notifications</span>
-                    {unreadCount > 0 && <button onClick={markAllRead} className="text-[10px] text-primary font-bold hover:underline">Mark as read</button>}
+                    <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Notifikasi</span>
+                    {unreadCount > 0 && <button onClick={markAllRead} className="text-[10px] text-primary font-bold hover:underline">Tandai dibaca</button>}
                   </div>
                   <div className="max-h-80 overflow-y-auto">
                     {notifications.length === 0 ? (
                       <div className="py-12 text-center space-y-2">
                         <span className="material-symbols-outlined text-4xl opacity-10">notifications_off</span>
-                        <p className="text-xs text-muted-foreground">All caught up!</p>
+                        <p className="text-xs text-muted-foreground">Semua sudah terbaca!</p>
                       </div>
                     ) : (
                       notifications.map(n => (
@@ -167,6 +168,7 @@ const Header = ({ title }) => {
             <button
               onClick={() => navigate('/profile')}
               className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-white text-xs font-black shadow-lg shadow-primary/20 hover:scale-105 transition-transform"
+              title="Profil Pengguna"
             >
               {user?.name?.[0]?.toUpperCase() || 'U'}
             </button>
@@ -174,7 +176,7 @@ const Header = ({ title }) => {
             <button
               onClick={() => setShowLogoutModal(true)}
               className="p-2 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
-              title="Logout"
+              title="Keluar"
             >
               <span className="material-symbols-outlined text-xl">logout</span>
             </button>
@@ -210,21 +212,21 @@ const Header = ({ title }) => {
               <span className="material-symbols-outlined text-4xl">logout</span>
             </div>
             <div className="space-y-2">
-              <h3 className="text-2xl font-black text-foreground">Sign Out</h3>
-              <p className="text-sm text-muted-foreground">Are you sure you want to end your session at <span className="text-primary font-bold">LuxeDrive</span>?</p>
+              <h3 className="text-2xl font-black text-foreground">Keluar Akun</h3>
+              <p className="text-sm text-muted-foreground">Apakah Anda yakin ingin mengakhiri sesi di <span className="text-primary font-bold">Bahrayyan Rental</span>?</p>
             </div>
             <div className="flex flex-col gap-3 pt-2">
               <button 
                 onClick={confirmLogout}
                 className="w-full py-4 rounded-2xl bg-destructive text-white font-black hover:opacity-90 transition-all shadow-xl shadow-destructive/20"
               >
-                Yes, Sign Out
+                Ya, Keluar Akun
               </button>
               <button 
                 onClick={() => setShowLogoutModal(false)}
                 className="w-full py-4 rounded-2xl bg-muted/50 text-foreground font-black hover:bg-muted transition-all"
               >
-                Stay Logged In
+                Tetap Masuk
               </button>
             </div>
           </div>

@@ -18,7 +18,7 @@ const Login = () => {
     e.preventDefault();
     setError('');
     if (!email || !password) {
-      setError('Credentials cannot be empty');
+      setError('Email dan kata sandi tidak boleh kosong');
       return;
     }
     setIsLoading(true);
@@ -34,7 +34,7 @@ const Login = () => {
         navigate('/dashboard', { replace: true });
       }
     } else {
-      setError(result.message || 'Invalid credentials. Please try again.');
+      setError(result.message || 'Email atau password salah. Silakan coba lagi.');
     }
   };
 
@@ -61,24 +61,24 @@ const Login = () => {
               </div>
               <div>
                 <h1 className="text-3xl font-black text-white tracking-tighter">Bahrayyan</h1>
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Precise Concierge</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Rental Mobil Premium</p>
               </div>
             </div>
             <h2 className="text-6xl font-black text-white tracking-tighter leading-none">
-              Excellence <br />
-              <span className="text-primary italic">Simplified.</span>
+              Kemewahan <br />
+              <span className="text-primary italic">Tanpa Batas.</span>
             </h2>
             <p className="text-zinc-400 text-lg max-w-sm leading-relaxed font-medium">
-              Access the world's most prestigious fleet through our integrated management sanctuary.
+              Akses armada mobil mewah paling prestisius dengan kenyamanan dan layanan terbaik.
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-6">
             {[
-              { icon: 'speed', label: 'Instant Booking' },
-              { icon: 'security', label: 'Premium Shield' },
-              { icon: 'support_agent', label: '24/7 Sanctuary' },
-              { icon: 'diamond', label: 'Elite Tier' },
+              { icon: 'speed', label: 'Pemesanan Instan' },
+              { icon: 'security', label: 'Proteksi Premium' },
+              { icon: 'support_agent', label: 'Layanan 24/7' },
+              { icon: 'diamond', label: 'Armada Eksklusif' },
             ].map((item) => (
               <div key={item.label} className="flex items-center gap-4 group">
                 <div className="w-10 h-10 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center group-hover:border-primary/50 transition-colors">
@@ -94,13 +94,13 @@ const Login = () => {
         <div className="w-full max-w-md mx-auto">
           <div className="bg-zinc-900/50 backdrop-blur-3xl border border-zinc-800 rounded-[3rem] p-10 shadow-2xl space-y-10">
             <header className="space-y-2">
-              <h3 className="text-3xl font-black text-white tracking-tight">Welcome Back</h3>
-              <p className="text-zinc-500 text-sm font-medium">Enter your credentials to access your sanctuary.</p>
+              <h3 className="text-3xl font-black text-white tracking-tight">Selamat Datang</h3>
+              <p className="text-zinc-500 text-sm font-medium">Masuk untuk mengakses layanan rental mobil.</p>
             </header>
 
             <form className="space-y-6" onSubmit={handleLogin}>
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Identity Mail</label>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Alamat Email</label>
                 <div className="relative">
                   <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600">mail</span>
                   <input 
@@ -108,13 +108,13 @@ const Login = () => {
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full pl-14 pr-6 py-4 bg-zinc-950 border border-zinc-800 rounded-2xl text-white outline-none focus:border-primary/50 transition-all font-bold text-sm"
-                    placeholder="architect@luxe.com"
+                    placeholder="nama@email.com"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Secure Protocol</label>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Kata Sandi</label>
                 <div className="relative">
                   <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600">lock</span>
                   <input 
@@ -137,9 +137,9 @@ const Login = () => {
               <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
                 <label className="flex items-center gap-2 cursor-pointer text-zinc-500 hover:text-zinc-300">
                   <input type="checkbox" className="w-4 h-4 rounded border-zinc-800 bg-zinc-950 accent-primary" />
-                  <span>Stay Synchronized</span>
+                  <span>Ingat Saya</span>
                 </label>
-                <a href="#" className="text-primary hover:opacity-80">Lost Credential?</a>
+                <a href="#" className="text-primary hover:opacity-80">Lupa Password?</a>
               </div>
 
               {error && (
@@ -158,7 +158,7 @@ const Login = () => {
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                 ) : (
                   <>
-                    <span>Enter Sanctuary</span>
+                    <span>Masuk Sekarang</span>
                     <span className="material-symbols-outlined text-base">arrow_right_alt</span>
                   </>
                 )}
@@ -167,8 +167,8 @@ const Login = () => {
 
             <footer className="text-center">
               <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">
-                New to the collection? {' '}
-                <button onClick={() => navigate('/register')} className="text-primary hover:opacity-80">Initialize Identity</button>
+                Belum punya akun? {' '}
+                <button onClick={() => navigate('/register')} className="text-primary hover:opacity-80">Daftar Akun Baru</button>
               </p>
             </footer>
           </div>

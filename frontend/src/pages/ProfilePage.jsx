@@ -25,12 +25,12 @@ const ProfilePage = () => {
     try {
       const result = await updateUser(formData);
       if (result.success) {
-        showMessage('Profile synchronized successfully');
+        showMessage('Profil berhasil diperbarui');
       } else {
-        showMessage(result.message || 'Update failed', 'error');
+        showMessage(result.message || 'Gagal memperbarui profil', 'error');
       }
     } catch (err) {
-      showMessage('An error occurred during synchronization', 'error');
+      showMessage('Terjadi kesalahan saat memperbarui profil', 'error');
     } finally {
       setIsUpdating(false);
     }
@@ -39,7 +39,7 @@ const ProfilePage = () => {
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     if (changePassword.new !== changePassword.confirm) {
-      showMessage('New passwords do not match', 'error');
+      showMessage('Konfirmasi password baru tidak cocok', 'error');
       return;
     }
     setIsUpdating(true);
@@ -48,10 +48,10 @@ const ProfilePage = () => {
         oldPassword: changePassword.current, 
         newPassword: changePassword.new 
       });
-      showMessage('Credentials updated successfully');
+      showMessage('Password berhasil diperbarui');
       setChangePassword({ current: '', new: '', confirm: '' });
     } catch (err) {
-      showMessage(err.message || 'Security update failed', 'error');
+      showMessage(err.message || 'Gagal mengubah password', 'error');
     } finally {
       setIsUpdating(false);
     }
@@ -71,8 +71,8 @@ const ProfilePage = () => {
   return (
     <div className="p-6 lg:p-12 space-y-12 animate-fade-in max-w-4xl mx-auto">
       <header>
-        <h2 className="text-4xl font-black tracking-tight text-foreground">Account Settings</h2>
-        <p className="text-muted-foreground mt-2">Manage your premium profile and security preferences.</p>
+        <h2 className="text-4xl font-black tracking-tight text-foreground">Pengaturan Akun</h2>
+        <p className="text-muted-foreground mt-2">Kelola profil pribadi dan keamanan akun Anda.</p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
@@ -85,28 +85,28 @@ const ProfilePage = () => {
             <div className="relative z-10 space-y-8">
               <div className="flex justify-between items-start">
                 <div className="space-y-1">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Membership Status</p>
-                  <p className="text-xl font-black italic tracking-wider uppercase">Elite Platinum</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Status Keanggotaan</p>
+                  <p className="text-xl font-black italic tracking-wider uppercase">Member Platinum</p>
                 </div>
                 <span className="material-symbols-outlined text-3xl opacity-50">hotel_class</span>
               </div>
 
               <div className="space-y-1">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Available Balance</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Poin Loyalitas Tersedia</p>
                 <div className="flex items-baseline gap-2">
-                  <h3 className="text-5xl font-black tracking-tighter">{(user?.points || 0).toLocaleString()}</h3>
-                  <span className="text-xs font-black uppercase tracking-widest opacity-80">Points</span>
+                  <h3 className="text-5xl font-black tracking-tighter">{(user?.points || 0).toLocaleString('id-ID')}</h3>
+                  <span className="text-xs font-black uppercase tracking-widest opacity-80">Poin</span>
                 </div>
               </div>
 
               <div className="pt-6 border-t border-white/20">
                 <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
-                  <span>Current Benefits</span>
-                  <span className="text-white/60">Verified Member</span>
+                  <span>Keuntungan Eksklusif</span>
+                  <span className="text-white/60">Terverifikasi</span>
                 </div>
                 <div className="mt-4 flex gap-2">
-                  <div className="px-3 py-1.5 bg-white/10 rounded-lg text-[9px] font-black uppercase border border-white/10">10% Off Rentals</div>
-                  <div className="px-3 py-1.5 bg-white/10 rounded-lg text-[9px] font-black uppercase border border-white/10">Priority Support</div>
+                  <div className="px-3 py-1.5 bg-white/10 rounded-lg text-[9px] font-black uppercase border border-white/10">Diskon Rental 10%</div>
+                  <div className="px-3 py-1.5 bg-white/10 rounded-lg text-[9px] font-black uppercase border border-white/10">Layanan Prioritas</div>
                 </div>
               </div>
             </div>
@@ -114,8 +114,8 @@ const ProfilePage = () => {
 
           <nav className="flex flex-col gap-2 p-2 bg-muted/30 border border-border rounded-3xl">
             {[
-              { id: 'account', label: 'General Information', icon: 'account_circle' },
-              { id: 'security', label: 'Security & Access', icon: 'shield_lock' }
+              { id: 'account', label: 'Informasi Umum', icon: 'account_circle' },
+              { id: 'security', label: 'Keamanan & Sandi', icon: 'shield_lock' }
             ].map(item => (
               <button
                 key={item.id}
@@ -145,25 +145,25 @@ const ProfilePage = () => {
               <form onSubmit={handleSubmit} className="space-y-8 animate-fade-in">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Full Identity Name</label>
-                    <input type="text" name="name" value={formData.name} onChange={handleChange} className="input" placeholder="Enter your full name" />
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Nama Lengkap</label>
+                    <input type="text" name="name" value={formData.name} onChange={handleChange} className="input" placeholder="Masukkan nama lengkap" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Electronic Mail</label>
-                    <input type="email" name="email" value={formData.email} onChange={handleChange} className="input" placeholder="your@email.com" />
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Alamat Email</label>
+                    <input type="email" name="email" value={formData.email} onChange={handleChange} className="input" placeholder="contoh@email.com" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Mobile Contact</label>
-                    <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="input" placeholder="+62 ..." />
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">No. WhatsApp / HP</label>
+                    <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="input" placeholder="+62 8..." />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Physical Address</label>
-                    <input type="text" name="address" value={formData.address} onChange={handleChange} className="input" placeholder="Street, City, Zip" />
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Alamat Tempat Tinggal</label>
+                    <input type="text" name="address" value={formData.address} onChange={handleChange} className="input" placeholder="Jalan, Kota, Kode Pos" />
                   </div>
                 </div>
                 <div className="pt-4 border-t border-border">
                   <button type="submit" disabled={isUpdating} className="btn btn-primary w-full py-4 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-3">
-                    {isUpdating ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : 'Synchronize Profile'}
+                    {isUpdating ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : 'Simpan Profil'}
                   </button>
                 </div>
               </form>
@@ -171,21 +171,21 @@ const ProfilePage = () => {
               <form onSubmit={handlePasswordSubmit} className="space-y-8 animate-fade-in">
                 <div className="space-y-6">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Current Credential</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Password Saat Ini</label>
                     <input type="password" name="current" value={changePassword.current} onChange={handlePasswordChange} className="input" placeholder="••••••••" required />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">New Credential</label>
-                    <input type="password" name="new" value={changePassword.new} onChange={handlePasswordChange} className="input" placeholder="Min. 8 characters" required />
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Password Baru</label>
+                    <input type="password" name="new" value={changePassword.new} onChange={handlePasswordChange} className="input" placeholder="Minimal 8 karakter" required />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Confirm New Credential</label>
-                    <input type="password" name="confirm" value={changePassword.confirm} onChange={handlePasswordChange} className="input" placeholder="Repeat new credential" required />
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Konfirmasi Password Baru</label>
+                    <input type="password" name="confirm" value={changePassword.confirm} onChange={handlePasswordChange} className="input" placeholder="Ulangi password baru" required />
                   </div>
                 </div>
                 <div className="pt-4 border-t border-border">
                   <button type="submit" disabled={isUpdating} className="btn btn-primary bg-destructive hover:bg-destructive/90 w-full py-4 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-3 border-none">
-                    {isUpdating ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : 'Update Security Protocol'}
+                    {isUpdating ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : 'Perbarui Password'}
                   </button>
                 </div>
               </form>

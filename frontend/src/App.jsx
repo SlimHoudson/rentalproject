@@ -29,7 +29,7 @@ const PageLoader = () => (
         </div>
     </div>
     <div className="flex flex-col items-center gap-2">
-        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-foreground/40">Initializing Protocol</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-foreground/40">Memuat Sistem...</p>
         <div className="flex gap-1">
             {[0, 1, 2].map(i => (
                 <div key={i} className="w-1.5 h-1.5 rounded-full bg-primary/20 animate-bounce" style={{ animationDelay: `${i * 0.15}s` }}></div>
@@ -53,64 +53,64 @@ function App() {
             {/* ====== LUXURY USER ECOSYSTEM ====== */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
-                <Layout title="Concierge Dashboard"><UserDashboard /></Layout>
+                <Layout title="Dashboard Pengguna"><UserDashboard /></Layout>
               </ProtectedRoute>
             } />
             <Route path="/cars" element={
               <ProtectedRoute>
-                <Layout title="Exclusive Fleet"><CarsPage /></Layout>
+                <Layout title="Katalog Mobil"><CarsPage /></Layout>
               </ProtectedRoute>
             } />
             <Route path="/checkout" element={
               <ProtectedRoute>
-                <Layout title="Secure Acquisition"><CheckoutPage /></Layout>
+                <Layout title="Pembayaran"><CheckoutPage /></Layout>
               </ProtectedRoute>
             } />
             <Route path="/history" element={
               <ProtectedRoute>
-                <Layout title="Personal Archive"><BookingHistory /></Layout>
+                <Layout title="Riwayat Pesanan"><BookingHistory /></Layout>
               </ProtectedRoute>
             } />
             <Route path="/profile" element={
               <ProtectedRoute>
-                <Layout title="Identity Profile"><ProfilePage /></Layout>
+                <Layout title="Profil Pengguna"><ProfilePage /></Layout>
               </ProtectedRoute>
             } />
 
             {/* ====== ADMINISTRATIVE COMMAND CENTER ====== */}
             <Route path="/admin/dashboard" element={
               <AdminRoute>
-                <Layout title="Operational Intelligence"><AdminDashboard /></Layout>
+                <Layout title="Dashboard Admin"><AdminDashboard /></Layout>
               </AdminRoute>
             } />
             <Route path="/admin/cars" element={
               <AdminRoute>
-                <Layout title="Fleet Asset Control"><AdminCarsPage /></Layout>
+                <Layout title="Manajemen Armada"><AdminCarsPage /></Layout>
               </AdminRoute>
             } />
             <Route path="/admin/users" element={
               <AdminRoute>
-                <Layout title="Registry Management"><AdminUsersPage /></Layout>
+                <Layout title="Manajemen Pelanggan"><AdminUsersPage /></Layout>
               </AdminRoute>
             } />
             <Route path="/admin/return" element={
               <AdminRoute>
-                <Layout title="Logistics Synchronization"><ReturnCar /></Layout>
+                <Layout title="Pengembalian Mobil"><ReturnCar /></Layout>
               </AdminRoute>
             } />
             <Route path="/admin/bookings" element={
               <AdminRoute>
-                <Layout title="Central Ledger"><BookingHistory /></Layout>
+                <Layout title="Daftar Transaksi"><BookingHistory /></Layout>
               </AdminRoute>
             } />
             <Route path="/admin/chat" element={
               <AdminRoute>
-                <Layout title="Communications Terminal"><AdminChat /></Layout>
+                <Layout title="Pusat Pesan"><AdminChat /></Layout>
               </AdminRoute>
             } />
             <Route path="/admin/history" element={
               <AdminRoute>
-                <Layout title="Global Archives"><BookingHistory /></Layout>
+                <Layout title="Arsip Transaksi"><BookingHistory /></Layout>
               </AdminRoute>
             } />
 

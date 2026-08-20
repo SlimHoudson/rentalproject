@@ -19,15 +19,15 @@ const Register = () => {
         setError('');
 
         if (!name || !email || !password || !confirmPassword) {
-            setError('All identity fields are mandatory');
+            setError('Semua kolom identitas wajib diisi');
             return;
         }
         if (password.length < 6) {
-            setError('Security protocol requires min. 6 characters');
+            setError('Password minimal harus terdiri dari 6 karakter');
             return;
         }
         if (password !== confirmPassword) {
-            setError('Credential confirmation does not match');
+            setError('Konfirmasi password tidak cocok');
             return;
         }
 
@@ -36,12 +36,12 @@ const Register = () => {
         setIsLoading(false);
 
         if (result.success) {
-            setSuccess('Identity initialized! Redirecting to sanctuary...');
+            setSuccess('Akun berhasil dibuat! Mengalihkan ke halaman login...');
             setTimeout(() => {
                 navigate('/login', { replace: true });
-            }, 3000);
+            }, 2500);
         } else {
-            setError(result.message || 'Initialization failed. Please retry.');
+            setError(result.message || 'Pendaftaran gagal. Silakan coba lagi.');
         }
     };
 
@@ -68,24 +68,24 @@ const Register = () => {
                             </div>
                             <div>
                                 <h1 className="text-3xl font-black text-white tracking-tighter">Bahrayyan</h1>
-                                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Precise Concierge</p>
+                                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Rental Mobil Premium</p>
                             </div>
                         </div>
                         <h2 className="text-6xl font-black text-white tracking-tighter leading-none">
-                            Join the <br />
-                            <span className="text-primary italic">Collection.</span>
+                            Gabung Bersama <br />
+                            <span className="text-primary italic">Kami.</span>
                         </h2>
                         <p className="text-zinc-400 text-lg max-w-sm leading-relaxed font-medium">
-                            Initialize your premium identity and gain exclusive access to the world's most refined fleet.
+                            Daftarkan akun Anda dan nikmati akses eksklusif ke berbagai pilihan armada mobil mewah terbaik.
                         </p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-6">
                         {[
-                            { icon: 'verified', label: 'Identity Verified' },
-                            { icon: 'military_tech', label: 'Elite Privileges' },
-                            { icon: 'shield_moon', label: 'Secure Sanctuary' },
-                            { icon: 'auto_fix_high', label: 'Bespoke Experience' },
+                            { icon: 'verified', label: 'Terverifikasi' },
+                            { icon: 'military_tech', label: 'Hak Istimewa' },
+                            { icon: 'shield_moon', label: 'Aman & Terpercaya' },
+                            { icon: 'auto_fix_high', label: 'Layanan Eksklusif' },
                         ].map((item) => (
                             <div key={item.label} className="flex items-center gap-4 group">
                                 <div className="w-10 h-10 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center group-hover:border-primary/50 transition-colors">
@@ -101,13 +101,13 @@ const Register = () => {
                 <div className="w-full max-w-md mx-auto">
                     <div className="bg-zinc-900/50 backdrop-blur-3xl border border-zinc-800 rounded-[3rem] p-10 shadow-2xl space-y-8">
                         <header className="space-y-2">
-                            <h3 className="text-3xl font-black text-white tracking-tight">Initialize Identity</h3>
-                            <p className="text-zinc-500 text-sm font-medium">Create your sanctuary credentials.</p>
+                            <h3 className="text-3xl font-black text-white tracking-tight">Daftar Akun</h3>
+                            <p className="text-zinc-500 text-sm font-medium">Buat akun untuk memulai pemesanan armada.</p>
                         </header>
 
                         <form className="space-y-5" onSubmit={handleRegister}>
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Full Identity</label>
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Nama Lengkap</label>
                                 <div className="relative">
                                     <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600">person</span>
                                     <input 
@@ -115,13 +115,13 @@ const Register = () => {
                                         value={name} 
                                         onChange={(e) => setName(e.target.value)}
                                         className="w-full pl-14 pr-6 py-3.5 bg-zinc-950 border border-zinc-800 rounded-2xl text-white outline-none focus:border-primary/50 transition-all font-bold text-sm"
-                                        placeholder="John Wick"
+                                        placeholder="Nama Lengkap Anda"
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Identity Mail</label>
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Alamat Email</label>
                                 <div className="relative">
                                     <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600">mail</span>
                                     <input 
@@ -129,13 +129,13 @@ const Register = () => {
                                         value={email} 
                                         onChange={(e) => setEmail(e.target.value)}
                                         className="w-full pl-14 pr-6 py-3.5 bg-zinc-950 border border-zinc-800 rounded-2xl text-white outline-none focus:border-primary/50 transition-all font-bold text-sm"
-                                        placeholder="architect@luxe.com"
+                                        placeholder="nama@email.com"
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Secure Protocol</label>
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Kata Sandi</label>
                                 <div className="relative">
                                     <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600">lock</span>
                                     <input 
@@ -143,7 +143,7 @@ const Register = () => {
                                         value={password} 
                                         onChange={(e) => setPassword(e.target.value)}
                                         className="w-full pl-14 pr-14 py-3.5 bg-zinc-950 border border-zinc-800 rounded-2xl text-white outline-none focus:border-primary/50 transition-all font-bold text-sm"
-                                        placeholder="Min. 6 chars"
+                                        placeholder="Min. 6 karakter"
                                     />
                                     <button 
                                         type="button" 
@@ -156,7 +156,7 @@ const Register = () => {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Confirm Protocol</label>
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Konfirmasi Kata Sandi</label>
                                 <div className="relative">
                                     <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600">lock_reset</span>
                                     <input 
@@ -164,7 +164,7 @@ const Register = () => {
                                         value={confirmPassword} 
                                         onChange={(e) => setConfirmPassword(e.target.value)}
                                         className="w-full pl-14 pr-6 py-3.5 bg-zinc-950 border border-zinc-800 rounded-2xl text-white outline-none focus:border-primary/50 transition-all font-bold text-sm"
-                                        placeholder="Repeat protocol"
+                                        placeholder="Ulangi kata sandi"
                                     />
                                 </div>
                             </div>
@@ -192,7 +192,7 @@ const Register = () => {
                                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                                 ) : (
                                     <>
-                                        <span>Initialize Account</span>
+                                        <span>Daftar Sekarang</span>
                                         <span className="material-symbols-outlined text-base">arrow_right_alt</span>
                                     </>
                                 )}
@@ -201,8 +201,8 @@ const Register = () => {
 
                         <footer className="text-center">
                             <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">
-                                Already possess identity? {' '}
-                                <button onClick={() => navigate('/login')} className="text-primary hover:opacity-80">Enter Sanctuary</button>
+                                Sudah punya akun? {' '}
+                                <button onClick={() => navigate('/login')} className="text-primary hover:opacity-80">Masuk di Sini</button>
                             </p>
                         </footer>
                     </div>

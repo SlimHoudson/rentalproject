@@ -128,21 +128,21 @@ const CarsPage = () => {
                   <div className="flex items-center gap-6 py-4 border-y border-border/50">
                     <div className="flex items-center gap-2">
                       <span className="material-symbols-outlined text-primary text-lg">settings</span>
-                      <span className="text-[10px] font-bold text-muted-foreground uppercase">{car.transmission || 'Auto'}</span>
+                      <span className="text-[10px] font-bold text-muted-foreground uppercase">{car.transmission || 'Otomatis'}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="material-symbols-outlined text-primary text-lg">person</span>
-                      <span className="text-[10px] font-bold text-muted-foreground uppercase">{car.seats || '5'} Seats</span>
+                      <span className="text-[10px] font-bold text-muted-foreground uppercase">{car.seats || '5'} Kursi</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="material-symbols-outlined text-primary text-lg">local_gas_station</span>
-                      <span className="text-[10px] font-bold text-muted-foreground uppercase">{car.fuel || 'Pertalite'}</span>
+                      <span className="text-[10px] font-bold text-muted-foreground uppercase">{car.fuel || 'Bensin'}</span>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between pt-2">
                     <div>
-                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Daily Rate</p>
+                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Harga Sewa / Hari</p>
                       <p className="text-xl font-black text-primary leading-none">Rp {car.pricePerDay?.toLocaleString('id-ID')}</p>
                     </div>
                     <button
@@ -150,7 +150,7 @@ const CarsPage = () => {
                       disabled={car.status !== 'Tersedia'}
                       className={`btn btn-primary px-8 py-3.5 rounded-2xl text-xs font-black tracking-widest uppercase ${car.status !== 'Tersedia' ? 'opacity-50 grayscale pointer-events-none' : ''}`}
                     >
-                      {car.status === 'Tersedia' ? 'Pesan' : car.status}
+                      {car.status === 'Tersedia' ? 'Sewa Sekarang' : car.status}
                     </button>
                   </div>
                 </div>
@@ -167,7 +167,7 @@ const CarsPage = () => {
               <span className="material-symbols-outlined">chevron_left</span>
             </button>
             <div className="flex items-center gap-2 px-6 py-3 bg-muted/30 border border-border rounded-2xl font-black text-xs text-muted-foreground">
-              PAGE <span className="text-foreground">{page}</span> OF <span className="text-foreground">{totalPages}</span>
+              HALAMAN <span className="text-foreground">{page}</span> DARI <span className="text-foreground">{totalPages}</span>
             </div>
             <button 
               onClick={() => setPage(p => Math.min(p + 1, totalPages))} 
@@ -188,7 +188,7 @@ const CarsPage = () => {
               <img src={selectedCar.imageUrl} alt="" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent flex flex-col justify-end p-8">
                 <h3 className="text-white font-black text-3xl mb-1">{selectedCar.name}</h3>
-                <p className="text-primary font-bold text-xs uppercase tracking-widest">{selectedCar.brand} Luxury Concierge</p>
+                <p className="text-primary font-bold text-xs uppercase tracking-widest">{selectedCar.brand} • Layanan Rental</p>
               </div>
               <button onClick={() => setSelectedCar(null)} className="absolute top-6 right-6 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/80 transition-all">
                 <span className="material-symbols-outlined">close</span>
@@ -239,9 +239,9 @@ const CarsPage = () => {
                   onClick={handleBookingConfirm}
                   className="w-full py-5 rounded-2xl bg-primary text-white font-black text-sm shadow-[0_20px_50px_rgba(79,70,229,0.3)] hover:-translate-y-1 transition-all uppercase tracking-widest"
                 >
-                  Confirm Reservation
+                  Lanjut ke Pembayaran
                 </button>
-                <p className="text-center text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-60">Payment and verification on next step</p>
+                <p className="text-center text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-60">Pembayaran dan konfirmasi pada langkah berikutnya</p>
               </div>
             </div>
           </div>

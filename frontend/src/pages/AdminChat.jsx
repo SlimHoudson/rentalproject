@@ -76,8 +76,8 @@ const AdminChat = () => {
                 <span className="material-symbols-outlined text-primary text-2xl">forum</span>
             </div>
             <div className="space-y-1">
-                <h3 className="text-xl font-black text-foreground uppercase tracking-tight">Telemetry</h3>
-                <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">Active Channels</p>
+                <h3 className="text-xl font-black text-foreground uppercase tracking-tight">Pesan Masuk</h3>
+                <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">Percakapan Pelanggan</p>
             </div>
           </div>
         </header>
@@ -86,7 +86,7 @@ const AdminChat = () => {
           {conversations.length === 0 ? (
             <div className="p-16 text-center opacity-20 flex flex-col items-center gap-6">
               <span className="material-symbols-outlined text-7xl">chat_bubble_outline</span>
-              <p className="text-[10px] font-black uppercase tracking-[0.3em]">No Active Signals</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em]">Belum Ada Pesan Masuk</p>
             </div>
           ) : (
             conversations.map((conv) => (
@@ -104,14 +104,14 @@ const AdminChat = () => {
                   {(conv.user?.name || 'U').charAt(0).toUpperCase()}
                 </div>
                 <div className="flex-1 text-left min-w-0 space-y-1">
-                  <p className="text-sm font-black text-foreground uppercase tracking-tight truncate">{conv.user?.name || 'Unknown Entity'}</p>
+                  <p className="text-sm font-black text-foreground uppercase tracking-tight truncate">{conv.user?.name || 'Pengguna'}</p>
                   <p className="text-[10px] text-muted-foreground font-medium truncate italic">
-                    {conv.lastMessage?.text || 'Awaiting transmission...'}
+                    {conv.lastMessage?.text || 'Belum ada percakapan...'}
                   </p>
                 </div>
                 <div className="text-right flex flex-col items-end gap-2">
                     <span className="text-[8px] text-muted-foreground font-black uppercase tracking-widest whitespace-nowrap">
-                        {conv.lastMessage ? new Date(conv.lastMessage.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                        {conv.lastMessage ? new Date(conv.lastMessage.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : ''}
                     </span>
                     {selectedUser?._id !== conv.user._id && (
                         <div className="w-2 h-2 rounded-full bg-primary/40 animate-pulse"></div>
@@ -137,11 +137,11 @@ const AdminChat = () => {
                     <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-success rounded-full border-4 border-card shadow-lg"></div>
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-xl font-black text-foreground uppercase tracking-tight">{selectedUser?.name || 'Unknown Entity'}</h4>
+                  <h4 className="text-xl font-black text-foreground uppercase tracking-tight">{selectedUser?.name || 'Pengguna'}</h4>
                   <div className="flex items-center gap-3">
                     <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">{selectedUser?.email || '-'}</p>
                     <span className="w-1 h-1 rounded-full bg-border"></span>
-                    <span className="text-[9px] text-success font-black uppercase tracking-widest">Authorized Link</span>
+                    <span className="text-[9px] text-success font-black uppercase tracking-widest">Pelanggan Aktif</span>
                   </div>
                 </div>
               </div>
@@ -167,7 +167,7 @@ const AdminChat = () => {
                     <p className="leading-relaxed font-medium">{msg.text}</p>
                     <div className={`absolute -bottom-6 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all ${(msg.sender === user?.id || msg.sender === user?._id) ? 'right-2' : 'left-2'}`}>
                         <span className="text-[8px] text-muted-foreground font-black uppercase tracking-widest">
-                            {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            {new Date(msg.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
                         </span>
                         <span className="material-symbols-outlined text-[10px] text-success">done_all</span>
                     </div>
@@ -187,8 +187,8 @@ const AdminChat = () => {
                   type="text"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  placeholder={`Secure transmission to ${(selectedUser?.name || 'Entity').split(' ')[0]}...`}
-                  className="flex-1 bg-transparent border-none px-2 py-4 text-sm font-bold text-foreground outline-none placeholder:text-muted-foreground/30 uppercase tracking-widest"
+                  placeholder={`Ketik pesan balasan untuk ${(selectedUser?.name || 'Pelanggan').split(' ')[0]}...`}
+                  className="flex-1 bg-transparent border-none px-2 py-4 text-sm font-bold text-foreground outline-none placeholder:text-muted-foreground/40"
                 />
                 <div className="flex items-center gap-2">
                     <button type="button" className="w-12 h-12 rounded-full hover:bg-muted transition-all text-muted-foreground flex items-center justify-center">
@@ -210,8 +210,8 @@ const AdminChat = () => {
                 <span className="material-symbols-outlined text-8xl text-muted-foreground/20">terminal</span>
             </div>
             <div className="space-y-2">
-                <h3 className="text-2xl font-black text-foreground/40 uppercase tracking-tight">Signal Processor Idle</h3>
-                <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.3em]">Initialize a secure channel from the registry</p>
+                <h3 className="text-2xl font-black text-foreground/40 uppercase tracking-tight">Pilih Percakapan</h3>
+                <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.3em]">Pilih salah satu pesan di panel kiri untuk mulai membalas</p>
             </div>
           </div>
         )}

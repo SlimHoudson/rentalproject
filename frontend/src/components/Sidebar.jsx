@@ -19,13 +19,13 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { to: '/admin/cars', icon: 'directions_car', label: 'Armada' },
     { to: '/admin/bookings', icon: 'calendar_today', label: 'Transaksi' },
     { to: '/admin/return', icon: 'assignment_return', label: 'Pengembalian' },
-    { to: '/admin/chat', icon: 'forum', label: 'Pesan' },
-    { to: '/admin/users', icon: 'group', label: 'Customers' },
+    { to: '/admin/chat', icon: 'forum', label: 'Pesan & Bantuan' },
+    { to: '/admin/users', icon: 'group', label: 'Pelanggan' },
   ] : [
     { to: '/dashboard', icon: 'dashboard', label: 'Dashboard' },
-    { to: '/cars', icon: 'directions_car', label: 'Armada' },
-    { to: '/history', icon: 'receipt_long', label: 'Riwayat' },
-    { to: '/checkout', icon: 'shopping_cart', label: 'Checkout' },
+    { to: '/cars', icon: 'directions_car', label: 'Katalog Mobil' },
+    { to: '/history', icon: 'receipt_long', label: 'Riwayat Pesanan' },
+    { to: '/checkout', icon: 'shopping_cart', label: 'Pembayaran' },
   ];
 
   return (
@@ -41,7 +41,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           </div>
           <div>
             <h2 className="text-sm font-black tracking-tight text-foreground uppercase">LuxeDrive</h2>
-            <p className="text-[9px] font-black tracking-[0.2em] text-muted-foreground uppercase opacity-70">Concierge</p>
+            <p className="text-[9px] font-black tracking-[0.2em] text-muted-foreground uppercase opacity-70">Rental Mobil</p>
           </div>
         </Link>
       </div>
@@ -53,15 +53,15 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             {user?.name?.[0]?.toUpperCase() || 'U'}
           </div>
           <div className="min-w-0">
-            <p className="text-xs font-bold text-foreground truncate">{user?.name || 'Guest'}</p>
-            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">{isAdmin ? '👑 Administrator' : '👤 Premium Member'}</p>
+            <p className="text-xs font-bold text-foreground truncate">{user?.name || 'Tamu'}</p>
+            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">{isAdmin ? '👑 Administrator' : '👤 Member'}</p>
           </div>
         </div>
       </div>
 
       {/* Nav */}
       <nav className="flex-1 px-4 space-y-1.5 overflow-y-auto custom-scrollbar">
-        <p className="px-4 py-2 text-[10px] font-black text-muted-foreground/60 uppercase tracking-[0.15em]">Main Navigation</p>
+        <p className="px-4 py-2 text-[10px] font-black text-muted-foreground/60 uppercase tracking-[0.15em]">Menu Utama</p>
         {menuItems.map((item) => {
           const active = isActive(item.to);
           return (

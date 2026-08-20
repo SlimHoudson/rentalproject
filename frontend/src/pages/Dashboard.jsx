@@ -75,7 +75,7 @@ export const AdminDashboard = () => {
       <div className="min-h-[80vh] flex items-center justify-center">
         <div className="flex flex-col items-center gap-6">
           <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">Initializing Command Center</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">Memuat Data Dashboard...</p>
         </div>
       </div>
     );
@@ -85,22 +85,22 @@ export const AdminDashboard = () => {
     <div className="p-6 lg:p-12 space-y-12 animate-fade-in max-w-[1600px] mx-auto gpu-accelerate">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-2">
-          <h2 className="text-4xl font-black tracking-tight text-foreground">System Intelligence</h2>
-          <p className="text-muted-foreground font-medium">Real-time performance metrics and fleet logistics.</p>
+          <h2 className="text-4xl font-black tracking-tight text-foreground">Ringkasan Sistem</h2>
+          <p className="text-muted-foreground font-medium">Metrik performa dan logistik armada rental secara real-time.</p>
         </div>
         <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-success/5 border border-success/20 text-[10px] font-black uppercase tracking-widest text-success">
           <span className="w-2 h-2 rounded-full bg-success animate-pulse"></span>
-          Operational Excellence
+          Sistem Berjalan Optimal
         </div>
       </header>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
         {[ 
-          { label: 'Fleet Assets', value: `${cars.length}`, suffix: 'Units', icon: 'directions_car', color: 'text-primary', bg: 'bg-primary/10', path: '/admin/cars' },
-          { label: 'Active Rentals', value: `${activeBookingsCount}`, suffix: 'Active', icon: 'key', color: 'text-blue-500', bg: 'bg-blue-500/10', path: '/admin/return' },
-          { label: 'Net Revenue', value: `Rp ${(totalRevenue / 1000000).toFixed(1)}`, suffix: 'Mil', icon: 'payments', color: 'text-success', bg: 'bg-success/10', path: '/admin/bookings' },
-          { label: 'Ledger Entries', value: `${bookings.length}`, suffix: 'Total', icon: 'receipt_long', color: 'text-violet-500', bg: 'bg-violet-500/10', path: '/admin/bookings' },
-          { label: 'Asset Health', value: `${maintenanceCount}`, suffix: 'Repair', icon: 'build', color: 'text-destructive', bg: 'bg-destructive/10', path: '/admin/cars' },
+          { label: 'Total Armada', value: `${cars.length}`, suffix: 'Unit', icon: 'directions_car', color: 'text-primary', bg: 'bg-primary/10', path: '/admin/cars' },
+          { label: 'Rental Aktif', value: `${activeBookingsCount}`, suffix: 'Mobil', icon: 'key', color: 'text-blue-500', bg: 'bg-blue-500/10', path: '/admin/return' },
+          { label: 'Total Pendapatan', value: `Rp ${(totalRevenue / 1000000).toFixed(1)}`, suffix: 'Juta', icon: 'payments', color: 'text-success', bg: 'bg-success/10', path: '/admin/bookings' },
+          { label: 'Total Transaksi', value: `${bookings.length}`, suffix: 'Pesanan', icon: 'receipt_long', color: 'text-violet-500', bg: 'bg-violet-500/10', path: '/admin/bookings' },
+          { label: 'Mobil Perawatan', value: `${maintenanceCount}`, suffix: 'Unit', icon: 'build', color: 'text-destructive', bg: 'bg-destructive/10', path: '/admin/cars' },
         ].map((stat) => (
           <button key={stat.label} onClick={() => navigate(stat.path)} className="group card p-6 text-left hover:-translate-y-1 transition-all">
             <div className={`w-12 h-12 rounded-2xl ${stat.bg} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
@@ -124,11 +124,11 @@ export const AdminDashboard = () => {
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
                 <span className="material-symbols-outlined text-primary">show_chart</span>
               </div>
-              <h3 className="text-lg font-black tracking-tight">Revenue Dynamics</h3>
+              <h3 className="text-lg font-black tracking-tight">Grafik Pendapatan</h3>
             </div>
             <select className="bg-muted/50 border-none rounded-lg text-[10px] font-black uppercase tracking-widest px-3 py-1.5 outline-none cursor-pointer">
-              <option>Last 6 Months</option>
-              <option>Year to Date</option>
+              <option>6 Bulan Terakhir</option>
+              <option>Tahun Ini</option>
             </select>
           </header>
           
@@ -147,18 +147,21 @@ export const AdminDashboard = () => {
                   <Line type="monotone" dataKey="total" stroke="var(--foreground)" strokeWidth={4} dot={{ r: 6, fill: 'var(--foreground)', strokeWidth: 0 }} activeDot={{ r: 8 }} />
                 </ComposedChart>
               </ResponsiveContainer>
-            ) : <div className="h-full flex items-center justify-center text-muted-foreground animate-pulse text-xs font-black uppercase tracking-widest">Awaiting Data Sync...</div>}
+            ) : <div className="h-full flex items-center justify-center text-muted-foreground animate-pulse text-xs font-black uppercase tracking-widest">Menunggu Data...</div>}
           </div>
         </div>
 
         <div className="card p-8 space-y-8">
-          <h3 className="text-lg font-black tracking-tight">Status Allocation</h3>
+          <h3 className="text-lg font-black tracking-tight">Status Pesanan</h3>
           <div className="h-[350px] flex items-center justify-center relative">
             {statusCounts && Object.keys(statusCounts).length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={Object.entries(statusCounts).map(([name, value]) => ({ name, value }))}
+                    data={Object.entries(statusCounts).map(([name, value]) => ({ 
+                      name: name === 'Pending Payment' ? 'Menunggu Bayar' : name === 'Payment Failed' ? 'Gagal' : name === 'Expired' ? 'Kedaluwarsa' : name, 
+                      value 
+                    }))}
                     innerRadius={85}
                     outerRadius={115}
                     paddingAngle={8}
@@ -185,25 +188,25 @@ export const AdminDashboard = () => {
       <div className="card overflow-hidden">
         <header className="p-8 border-b border-border flex justify-between items-center bg-muted/10">
           <div className="space-y-1">
-            <h3 className="text-lg font-black tracking-tight">Recent Ledger Entries</h3>
-            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Live transaction monitoring protocol</p>
+            <h3 className="text-lg font-black tracking-tight">Transaksi Terkini</h3>
+            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Pemantauan transaksi rental langsung</p>
           </div>
-          <button onClick={() => navigate('/admin/bookings')} className="btn btn-secondary px-6 py-2.5 text-[10px] font-black uppercase tracking-widest">Audit Full Ledger</button>
+          <button onClick={() => navigate('/admin/bookings')} className="btn btn-secondary px-6 py-2.5 text-[10px] font-black uppercase tracking-widest">Lihat Semua Transaksi</button>
         </header>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-muted/5 border-b border-border">
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Entity</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Asset</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Timeline</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">valuation</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Protocol</th>
+                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Pelanggan</th>
+                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Kendaraan</th>
+                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Jadwal Sewa</th>
+                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Total Biaya</th>
+                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {bookings.length === 0 ? (
-                <tr><td colSpan="5" className="py-20 text-center text-muted-foreground font-black uppercase tracking-widest text-xs opacity-30">Awaiting Network Transactions...</td></tr>
+                <tr><td colSpan="5" className="py-20 text-center text-muted-foreground font-black uppercase tracking-widest text-xs opacity-30">Belum ada transaksi transaksi baru...</td></tr>
               ) : (
                 bookings.slice(0, 10).map((b, idx) => (
                   <tr key={b._id || idx} className="hover:bg-muted/10 transition-colors">
@@ -213,32 +216,32 @@ export const AdminDashboard = () => {
                           {b.user?.name ? b.user.name[0] : '?'}  
                         </div>
                         <div className="space-y-0.5">
-                          <p className="font-black text-sm text-foreground uppercase tracking-tight">{b.user?.name || 'Anonymous'}</p>
-                          <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">{b.user?.email || 'N/A'}</p>
+                          <p className="font-black text-sm text-foreground uppercase tracking-tight">{b.user?.name || 'Anonim'}</p>
+                          <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">{b.user?.email || '-'}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-8 py-6">
                       <div className="space-y-0.5">
-                        <p className="font-black text-sm text-foreground uppercase tracking-tight">{b.car?.name || 'Asset Redacted'}</p>
-                        <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">{b.car?.plateNumber || 'ID-REDACTED'}</p>
+                        <p className="font-black text-sm text-foreground uppercase tracking-tight">{b.car?.name || 'Mobil'}</p>
+                        <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">{b.car?.plateNumber || '-'}</p>
                       </div>
                     </td>
                     <td className="px-8 py-6">
                       <div className="flex items-center gap-2">
                         <span className="material-symbols-outlined text-xs text-muted-foreground">calendar_month</span>
-                        <span className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">{b.startDate ? new Date(b.startDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) : 'Pending'}</span>
+                        <span className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">{b.startDate ? new Date(b.startDate).toLocaleDateString('id-ID', { month: 'short', day: '2-digit', year: 'numeric' }) : 'Tertunda'}</span>
                       </div>
                     </td>
                     <td className="px-8 py-6">
-                      <p className="font-black text-sm text-primary">Rp {(b.totalPrice || b.total || 0).toLocaleString()}</p>
+                      <p className="font-black text-sm text-primary">Rp {(b.totalPrice || b.total || 0).toLocaleString('id-ID')}</p>
                     </td>
                     <td className="px-8 py-6">
                       <span className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-[0.1em] border ${
                         b.status === 'Selesai' ? 'bg-success/5 text-success border-success/20' : 
                         b.status === 'Dibatalkan' ? 'bg-destructive/5 text-destructive border-destructive/20' : 
                         'bg-blue-500/5 text-blue-500 border-blue-500/20'
-                      }`}>{b.status || 'Initiating'}</span>
+                      }`}>{b.status || 'Berjalan'}</span>
                     </td>
                   </tr>
                 ))
@@ -287,9 +290,9 @@ export const UserDashboard = () => {
 
   const handleCheckPoints = () => {
     if (currentPoints < 1000) {
-      setToast({ type: 'info', title: 'Loyalty Status', message: `Maintain participation. ${1000 - currentPoints} additional points required for elite discounts.` });
+      setToast({ type: 'info', title: 'Status Poin Loyalitas', message: `Tingkatkan transaksi. Butuh ${1000 - currentPoints} poin lagi untuk mendapatkan diskon khusus.` });
     } else {
-      setToast({ type: 'success', title: 'Privilege Unlocked', message: 'Your loyalty status enables immediate checkout discounts.' });
+      setToast({ type: 'success', title: 'Diskon Tersedia', message: 'Poin Anda mencukupi untuk potongan harga langsung di halaman checkout.' });
     }
     setTimeout(() => setToast(null), 4000);
   };
@@ -315,31 +318,31 @@ export const UserDashboard = () => {
           <div className="space-y-8 max-w-xl">
             <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Premium Access Verified</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Akses Member Terverifikasi</span>
             </div>
             <div className="space-y-4">
               <h2 className="text-4xl lg:text-6xl font-black text-white leading-none tracking-tighter">
-                Welcome back,<br /> <span className="text-primary italic">{user?.name?.split(' ')[0]}</span>.
+                Selamat datang kembali,<br /> <span className="text-primary italic">{user?.name?.split(' ')[0]}</span>.
               </h2>
               <p className="text-zinc-400 text-lg leading-relaxed font-medium">
-                Your sanctuary awaits. The current collection is synchronized and ready for your selection.
+                Pilihan armada mobil terbaik siap menemani setiap perjalanan dan momen istimewa Anda.
               </p>
             </div>
             <button onClick={() => navigate('/cars')} className="btn btn-primary px-10 py-5 rounded-2xl group shadow-2xl shadow-primary/40 text-xs font-black uppercase tracking-[0.2em]">
-              Explore Collection
+              Jelajahi Armada
               <span className="material-symbols-outlined transition-transform group-hover:translate-x-2">arrow_right_alt</span>
             </button>
           </div>
 
           <div className="hidden lg:flex flex-col gap-6 p-8 bg-white/5 border border-white/10 rounded-[2.5rem] backdrop-blur-2xl">
             <div className="space-y-1">
-              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Member ID</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">ID Member</p>
               <p className="text-xs font-black text-white tracking-widest uppercase">{user?._id?.slice(-8).toUpperCase()}</p>
             </div>
             <div className="h-px bg-white/10"></div>
             <div className="space-y-1">
               <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Status</p>
-              <p className="text-xs font-black text-primary tracking-widest uppercase">Elite Member</p>
+              <p className="text-xs font-black text-primary tracking-widest uppercase">Member Prioritas</p>
             </div>
           </div>
         </div>
@@ -347,9 +350,9 @@ export const UserDashboard = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
-          { id: 'ledger', label: 'Transaction History', value: bookingCount, unit: 'Entries', icon: 'history_edu', action: () => navigate('/history') },
-          { id: 'active', label: 'Active Rentals', value: activeCount, unit: 'Assets', icon: 'key', color: 'text-blue-500', bg: 'bg-blue-500/10', action: () => navigate('/history') },
-          { id: 'loyalty', label: 'Loyalty Balance', value: currentPoints.toLocaleString(), unit: 'Credits', icon: 'stars', color: 'text-amber-500', bg: 'bg-amber-500/10', action: handleCheckPoints, sub: currentPoints >= 1000 ? 'Privilege Active' : null }
+          { id: 'ledger', label: 'Riwayat Transaksi', value: bookingCount, unit: 'Pesanan', icon: 'history_edu', action: () => navigate('/history') },
+          { id: 'active', label: 'Rental Berjalan', value: activeCount, unit: 'Mobil', icon: 'key', color: 'text-blue-500', bg: 'bg-blue-500/10', action: () => navigate('/history') },
+          { id: 'loyalty', label: 'Poin Loyalitas', value: currentPoints.toLocaleString(), unit: 'Poin', icon: 'stars', color: 'text-amber-500', bg: 'bg-amber-500/10', action: handleCheckPoints, sub: currentPoints >= 1000 ? 'Diskon Tersedia' : null }
         ].map(item => (
           <button key={item.id} onClick={item.action} className="group card p-8 flex items-center gap-6 text-left hover:-translate-y-1 transition-all">
             <div className={`w-16 h-16 rounded-[1.25rem] ${item.bg || 'bg-muted/50'} flex items-center justify-center group-hover:scale-110 transition-transform`}>
@@ -372,10 +375,10 @@ export const UserDashboard = () => {
         <div className="lg:col-span-7 space-y-8">
           <header className="flex items-center justify-between">
             <div className="space-y-1">
-              <h3 className="text-2xl font-black tracking-tight">Recent Activity</h3>
-              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Your synchronized rental protocol</p>
+              <h3 className="text-2xl font-black tracking-tight">Aktivitas Terkini</h3>
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Riwayat sewa mobil Anda</p>
             </div>
-            <button onClick={() => navigate('/history')} className="text-[10px] font-black uppercase tracking-widest text-primary hover:opacity-70 transition-opacity">Full Archive</button>
+            <button onClick={() => navigate('/history')} className="text-[10px] font-black uppercase tracking-widest text-primary hover:opacity-70 transition-opacity">Lihat Semua</button>
           </header>
           
           <div className="card divide-y divide-border overflow-hidden content-auto">
@@ -384,7 +387,7 @@ export const UserDashboard = () => {
                 <div className="w-16 h-16 rounded-3xl bg-muted/30 flex items-center justify-center mx-auto mb-6">
                   <span className="material-symbols-outlined text-3xl opacity-20">history</span>
                 </div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">Archive Vacant</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">Belum ada riwayat pesanan</p>
               </div>
             ) : (
               recentBookings.map((b, i) => (
@@ -393,15 +396,15 @@ export const UserDashboard = () => {
                     <img src={b.car?.imageUrl} alt="" className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0 space-y-1">
-                    <p className="font-black text-sm uppercase tracking-tight truncate">{b.car?.name || 'Sanctuary Asset'}</p>
+                    <p className="font-black text-sm uppercase tracking-tight truncate">{b.car?.name || 'Kendaraan'}</p>
                     <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                      <span>{new Date(b.startDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit' })}</span>
+                      <span>{new Date(b.startDate).toLocaleDateString('id-ID', { month: 'short', day: '2-digit' })}</span>
                       <span className="w-1 h-1 rounded-full bg-border"></span>
-                      <span>{b.totalDays} Cycle Units</span>
+                      <span>{b.totalDays} Hari</span>
                     </div>
                   </div>
                   <div className="text-right space-y-2">
-                    <p className="text-sm font-black text-primary tracking-tight">Rp {(b.totalPrice || 0).toLocaleString()}</p>
+                    <p className="text-sm font-black text-primary tracking-tight">Rp {(b.totalPrice || 0).toLocaleString('id-ID')}</p>
                     <span className={`px-2.5 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest border ${
                       b.status === 'Selesai' ? 'bg-success/5 text-success border-success/20' : 'bg-primary/5 text-primary border-primary/20'
                     }`}>{b.status}</span>
@@ -416,10 +419,10 @@ export const UserDashboard = () => {
         <div className="lg:col-span-5 space-y-8">
           <header className="flex items-center justify-between">
             <div className="space-y-1">
-              <h3 className="text-2xl font-black tracking-tight">The Collection</h3>
-              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Curated assets for your next journey</p>
+              <h3 className="text-2xl font-black tracking-tight">Rekomendasi Mobil</h3>
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Pilihan kendaraan untuk perjalanan Anda</p>
             </div>
-            <button onClick={() => navigate('/cars')} className="text-[10px] font-black uppercase tracking-widest text-primary hover:opacity-70 transition-opacity">Full Gallery</button>
+            <button onClick={() => navigate('/cars')} className="text-[10px] font-black uppercase tracking-widest text-primary hover:opacity-70 transition-opacity">Lihat Semua</button>
           </header>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -427,14 +430,14 @@ export const UserDashboard = () => {
               <div key={car._id} onClick={() => navigate('/cars')} className="group card p-5 space-y-5 cursor-pointer hover:border-primary/40 transition-all">
                 <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-muted relative border border-border">
                   <img src={car.imageUrl} alt={car.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute top-3 right-3 px-3 py-1.5 bg-background/80 backdrop-blur-md rounded-xl text-[8px] font-black uppercase tracking-widest shadow-2xl border border-border">Available</div>
+                  <div className="absolute top-3 right-3 px-3 py-1.5 bg-background/80 backdrop-blur-md rounded-xl text-[8px] font-black uppercase tracking-widest shadow-2xl border border-border">Tersedia</div>
                 </div>
                 <div className="space-y-3">
                   <h4 className="font-black text-sm uppercase tracking-tight truncate">{car.name}</h4>
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Daily Cycle</p>
-                      <p className="text-xs font-black text-foreground tracking-tight">Rp {car.pricePerDay?.toLocaleString()}</p>
+                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Tarif / Hari</p>
+                      <p className="text-xs font-black text-foreground tracking-tight">Rp {car.pricePerDay?.toLocaleString('id-ID')}</p>
                     </div>
                     <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                       <span className="material-symbols-outlined text-sm text-muted-foreground group-hover:text-primary transition-all">arrow_forward</span>

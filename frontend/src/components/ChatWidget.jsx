@@ -99,7 +99,7 @@ const ChatWidget = () => {
                 }`}>
                   {msg.text}
                   <p className={`text-[9px] mt-1 opacity-50 ${(msg.sender === user?.id || msg.sender === user?._id) ? 'text-right' : 'text-left'}`}>
-                    {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {new Date(msg.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </div>
               </div>
