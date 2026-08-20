@@ -38,7 +38,7 @@ bookingSchema.index({ paymentStatus: 1 });
 bookingSchema.index({ createdAt: 1 });
 
 // Prevent overlapping bookings for the same car
-bookingSchema.pre('save', async function (next) {
+bookingSchema.pre('save', async function () {
   if (this.isNew) {
     const existingBooking = await this.constructor.findOne({
       car: this.car,
@@ -49,11 +49,10 @@ bookingSchema.pre('save', async function (next) {
     });
     if (existingBooking) {
       const err = new Error('Mobil sudah dipesan untuk tanggal tersebut.');
-      err.name = 'ValidationError'; // Setting name to ValidationError so it's caught as 400
-      return next(err);
+      err.name = 'ValidationError';
+      throw err;
     }
   }
-  next();
 });
 
 module.exports = mongoose.model('Booking', bookingSchema);
