@@ -31,9 +31,10 @@ export const AdminDashboard = () => {
     fetchAdminData();
   }, []);
 
-  const totalRevenue = bookings.filter(b => b && b.status !== 'Dibatalkan').reduce((sum, b) => sum + ((b.totalPrice || b.total || 0)), 0);
+  const totalRevenue = bookings.filter(b => b && b.status !== 'Dibatalkan' && b.status !== 'Ditolak').reduce((sum, b) => sum + ((b.totalPrice || b.total || 0)), 0);
   const maintenanceCount = cars.filter(c => c && c.status === 'Perawatan').length;
   const activeBookingsCount = bookings.filter(b => b && (b.status === 'Berjalan' || b.status === 'Aktif' || b.status === 'Terlambat')).length;
+  const pendingValidationCount = bookings.filter(b => b && b.status === 'Menunggu Konfirmasi').length;
 
   const getMonthlyRevenueData = () => {
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -45,7 +46,7 @@ export const AdminDashboard = () => {
       revenueByMonth[key] = { month: months[d.getMonth()], total: 0, count: 0 };
     }
     bookings.forEach(b => {
-      if (b && b.status !== 'Dibatalkan') {
+      if (b && b.status !== 'Dibatalkan' && b.status !== 'Ditolak') {
         const dateRaw = b.createdAt || b.startDate;
         if (!dateRaw) return;
         const created = new Date(dateRaw);
@@ -86,7 +87,7 @@ export const AdminDashboard = () => {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-2">
           <h2 className="text-4xl font-black tracking-tight text-foreground">Ringkasan Sistem</h2>
-          <p className="text-muted-foreground font-medium">Metrik performa dan logistik armada rental secara real-time.</p>
+          <p className="text-muted-foreground font-medium">Metrik performa, validasi pesanan, dan logistik armada rental secara real-time.</p>
         </div>
         <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-success/5 border border-success/20 text-[10px] font-black uppercase tracking-widest text-success">
           <span className="w-2 h-2 rounded-full bg-success"></span>
@@ -96,10 +97,10 @@ export const AdminDashboard = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
         {[ 
+          { label: 'Perlu Validasi', value: `${pendingValidationCount}`, suffix: 'Pesanan', icon: 'pending_actions', color: 'text-amber-500', bg: 'bg-amber-500/10', path: '/admin/bookings' },
           { label: 'Total Armada', value: `${cars.length}`, suffix: 'Unit', icon: 'directions_car', color: 'text-primary', bg: 'bg-primary/10', path: '/admin/cars' },
           { label: 'Rental Aktif', value: `${activeBookingsCount}`, suffix: 'Mobil', icon: 'key', color: 'text-blue-500', bg: 'bg-blue-500/10', path: '/admin/return' },
           { label: 'Total Pendapatan', value: `Rp ${(totalRevenue / 1000000).toFixed(1)}`, suffix: 'Juta', icon: 'payments', color: 'text-success', bg: 'bg-success/10', path: '/admin/bookings' },
-          { label: 'Total Transaksi', value: `${bookings.length}`, suffix: 'Pesanan', icon: 'receipt_long', color: 'text-violet-500', bg: 'bg-violet-500/10', path: '/admin/bookings' },
           { label: 'Mobil Perawatan', value: `${maintenanceCount}`, suffix: 'Unit', icon: 'build', color: 'text-destructive', bg: 'bg-destructive/10', path: '/admin/cars' },
         ].map((stat) => (
           <button key={stat.label} onClick={() => navigate(stat.path)} className="group card p-6 text-left hover:border-primary/40 transition-colors">
@@ -238,10 +239,14 @@ export const AdminDashboard = () => {
                     </td>
                     <td className="px-8 py-6">
                       <span className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-[0.1em] border ${
-                        b.status === 'Selesai' ? 'bg-success/5 text-success border-success/20' : 
-                        b.status === 'Dibatalkan' ? 'bg-destructive/5 text-destructive border-destructive/20' : 
-                        'bg-blue-500/5 text-blue-500 border-blue-500/20'
-                      }`}>{b.status || 'Berjalan'}</span>
+                        b.status === 'Menunggu Konfirmasi' ? 'bg-amber-500/10 text-amber-500 border-amber-500/30 animate-pulse' :
+                        b.status === 'Aktif' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/30' :
+                        b.status === 'Selesai' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' : 
+                        b.status === 'Dibatalkan' || b.status === 'Ditolak' ? 'bg-destructive/10 text-destructive border-destructive/20' : 
+                        'bg-muted text-muted-foreground border-border'
+                      }`}>
+                        {b.status === 'Menunggu Konfirmasi' ? 'Perlu Validasi' : (b.status || 'Berjalan')}
+                      </span>
                     </td>
                   </tr>
                 ))

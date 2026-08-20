@@ -79,8 +79,9 @@ router.post('/notification', callbackLimiter, asyncHandler(async (req, res) => {
     let updatedPaymentStatus = 'pending_payment';
 
     if (transaction_status === 'settlement' || transaction_status === 'capture') {
-        updatedStatus = 'Aktif';
+        updatedStatus = 'Menunggu Konfirmasi';
         updatedPaymentStatus = 'paid';
+        // Keep car status or reserve it
         await Car.findByIdAndUpdate(booking.car, { status: 'Disewa' });
         await User.findByIdAndUpdate(booking.user, { $inc: { points: 250 } });
         
@@ -126,7 +127,7 @@ router.post('/demo-confirm', auth, asyncHandler(async (req, res) => {
     const booking = await Booking.findOne({ orderId, user: req.user.id });
     if (!booking) return res.status(404).json({ error: 'Booking tidak ditemukan.' });
 
-    booking.status = 'Aktif';
+    booking.status = 'Menunggu Konfirmasi';
     booking.paymentStatus = 'paid';
     booking.paidAt = new Date();
     booking.paymentMethod = 'Demo Payment';
@@ -135,7 +136,7 @@ router.post('/demo-confirm', auth, asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(booking.user, { $inc: { points: 250 } });
 
     await booking.save();
-    res.json({ message: 'Pembayaran demo berhasil dikonfirmasi.' });
+    res.json({ message: 'Pembayaran berhasil dikonfirmasi. Menunggu validasi admin.' });
 }));
 
 module.exports = router;

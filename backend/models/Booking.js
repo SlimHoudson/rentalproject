@@ -10,7 +10,7 @@ const bookingSchema = new mongoose.Schema({
   totalPrice: { type: Number, required: true, min: [0, 'Total price cannot be negative'] },
   status: { 
     type: String, 
-    enum: ['Aktif', 'Selesai', 'Dibatalkan', 'Terlambat', 'Pending Payment', 'Payment Failed', 'Expired'], 
+    enum: ['Menunggu Konfirmasi', 'Aktif', 'Selesai', 'Dibatalkan', 'Ditolak', 'Terlambat', 'Pending Payment', 'Payment Failed', 'Expired'], 
     default: 'Pending Payment' 
   },
   paymentStatus: { 
@@ -23,6 +23,10 @@ const bookingSchema = new mongoose.Schema({
   paidAt: { type: Date },
   returnDate: { type: Date },
   lateFee: { type: Number, default: 0, min: [0, 'Late fee cannot be negative'] },
+  validationNotes: { type: String },
+  rejectionReason: { type: String },
+  validatedAt: { type: Date },
+  validatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   // Adding items detail for scalability (as requested for order_items)
   items: [{
     carId: { type: mongoose.Schema.Types.ObjectId, ref: 'Car' },
@@ -42,7 +46,7 @@ bookingSchema.pre('save', async function () {
   if (this.isNew) {
     const existingBooking = await this.constructor.findOne({
       car: this.car,
-      status: { $in: ['Aktif', 'Pending Payment'] },
+      status: { $in: ['Aktif', 'Pending Payment', 'Menunggu Konfirmasi'] },
       $or: [
         { startDate: { $lte: this.endDate }, endDate: { $gte: this.startDate } }
       ]

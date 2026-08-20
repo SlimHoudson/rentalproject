@@ -104,3 +104,43 @@ exports.cancelBooking = asyncHandler(async (req, res, next) => {
 
   res.json({ message: 'Booking cancelled successfully', booking });
 });
+
+// Admin Validation (Shopee Style: Approve / Reject with Notes)
+exports.validateBooking = asyncHandler(async (req, res, next) => {
+  const { action, notes } = req.body; // action: 'approve' | 'reject'
+  const booking = await Booking.findById(req.params.id).populate('car').populate('user');
+  
+  if (!booking) {
+    return res.status(404).json({ error: 'Pesanan tidak ditemukan.' });
+  }
+
+  if (action === 'approve') {
+    booking.status = 'Aktif';
+    booking.validatedAt = new Date();
+    booking.validatedBy = req.user.id;
+    booking.validationNotes = notes || 'Pesanan telah diverifikasi dan disetujui oleh admin.';
+    
+    // Set car status to Disewa
+    if (booking.car) {
+      await Car.findByIdAndUpdate(booking.car._id || booking.car, { status: 'Disewa' });
+    }
+    
+    await booking.save();
+    return res.json({ message: 'Pesanan berhasil disetujui & divalidasi.', booking });
+  } else if (action === 'reject') {
+    booking.status = 'Ditolak';
+    booking.rejectionReason = notes || 'Pesanan tidak memenuhi syarat atau jadwal armada tidak sesuai.';
+    booking.validatedAt = new Date();
+    booking.validatedBy = req.user.id;
+    
+    // Release car back to Tersedia
+    if (booking.car) {
+      await Car.findByIdAndUpdate(booking.car._id || booking.car, { status: 'Tersedia' });
+    }
+    
+    await booking.save();
+    return res.json({ message: 'Pesanan telah ditolak.', booking });
+  } else {
+    return res.status(400).json({ error: 'Aksi validasi tidak valid (harus approve atau reject).' });
+  }
+});

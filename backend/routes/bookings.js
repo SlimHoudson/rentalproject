@@ -35,6 +35,7 @@ router.post('/', auth, checkoutLimiter, ...bookingValidation, handleValidationEr
 router.get('/my-bookings', auth, bookingController.getMyBookings);
 router.get('/', auth, adminAuth, bookingController.getAllBookings);
 router.post('/:id/cancel', auth, bookingController.cancelBooking);
+router.post('/:id/validate', auth, adminAuth, bookingController.validateBooking);
 router.post('/:id/return', auth, adminAuth, async (req, res) => {
   try {
     const { lateFee } = req.body;
