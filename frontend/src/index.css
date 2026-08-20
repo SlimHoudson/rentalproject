@@ -126,8 +126,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
-  scroll-behavior: smooth;
-  text-rendering: optimizeLegibility;
+  text-rendering: optimizeSpeed;
   -webkit-text-size-adjust: 100%;
   font-size: 16px;
 }
@@ -140,8 +139,6 @@ body {
   font-weight: 400;
   letter-spacing: -0.011em;
   font-feature-settings: "cv02","cv03","cv04","cv11";
-  transition: background-color var(--dur-slow) var(--ease),
-              color var(--dur-slow) var(--ease);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -363,9 +360,7 @@ code {
   position: fixed;
   inset: 0;
   z-index: 200;
-  background: var(--bg-overlay);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -461,10 +456,8 @@ code {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: var(--nav-bg);
-  border-bottom: 1px solid var(--nav-border);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: var(--bg-base);
+  border-bottom: 1px solid var(--border);
 }
 
 /* Sidebar */
@@ -528,32 +521,26 @@ code {
 /* ─── UTILITIES ───────────────────────────────────────────── */
 @layer utilities {
   .glass {
-    background: rgba(255,255,255,0.7);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.3);
+    background: var(--bg-base);
+    border: 1px solid var(--border);
   }
   .dark .glass {
-    background: rgba(22,27,39,0.70);
-    border: 1px solid rgba(240,246,252,0.06);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
   }
 
   .gpu-accelerate {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-    will-change: transform, opacity;
+    contain: layout style paint;
   }
 
   .content-auto {
     content-visibility: auto;
-    contain-intrinsic-size: 1px 500px;
+    contain-intrinsic-size: 1px 400px;
   }
 
   .smooth-render {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
   }
 
   .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -562,13 +549,13 @@ code {
   .text-balance { text-wrap: balance; }
 
   .animate-fade-in {
-    animation: fadeIn var(--dur-base) var(--ease-out) forwards;
+    animation: fadeIn 0.15s ease-out forwards;
   }
   .animate-slide-up {
-    animation: slideUp var(--dur-base) var(--ease-out) forwards;
+    animation: slideUp 0.15s ease-out forwards;
   }
   .animate-scale-in {
-    animation: scaleIn var(--dur-base) var(--ease-out) forwards;
+    animation: scaleIn 0.15s ease-out forwards;
   }
 }
 

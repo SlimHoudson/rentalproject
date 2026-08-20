@@ -14,7 +14,7 @@ const Toast = ({ msg, type, onClose }) => {
   useEffect(() => { const t = setTimeout(onClose, 4000); return () => clearTimeout(t); }, [onClose]);
   return (
     <div className="fixed bottom-12 right-12 z-[100] animate-slide-up">
-        <div className="bg-card/80 backdrop-blur-3xl border border-border shadow-2xl p-6 rounded-[2rem] flex items-center gap-6 min-w-[340px]">
+        <div className="bg-card border border-border shadow-xl p-6 rounded-2xl flex items-center gap-6 min-w-[340px]">
             <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner ${
                 type === 'success' ? 'bg-success/20 text-success' : 'bg-destructive/20 text-destructive'
             }`}>
@@ -30,7 +30,7 @@ const Toast = ({ msg, type, onClose }) => {
 };
 
 const DeleteModal = ({ car, onConfirm, onCancel }) => (
-  <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-fade-in">
+  <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/75 animate-fade-in">
     <div className="bg-card border border-border rounded-[3rem] p-12 max-w-md w-full shadow-2xl text-center space-y-8">
       <div className="w-20 h-20 rounded-3xl bg-destructive/10 flex items-center justify-center mx-auto shadow-inner">
         <span className="material-symbols-outlined text-4xl text-destructive">delete_forever</span>
@@ -39,9 +39,9 @@ const DeleteModal = ({ car, onConfirm, onCancel }) => (
         <h3 className="text-2xl font-black text-foreground tracking-tight uppercase">Hapus Mobil?</h3>
         <p className="text-muted-foreground text-sm font-medium">Anda akan menghapus mobil <span className="text-foreground font-black tracking-tight">{car?.name}</span> dari daftar armada. Tindakan ini tidak dapat dibatalkan.</p>
       </div>
-      <div className="flex gap-4">
-        <button onClick={onCancel} className="flex-1 py-4 rounded-2xl border border-border text-muted-foreground font-black text-[10px] uppercase tracking-widest hover:bg-muted/50 transition-all">Batal</button>
-        <button onClick={onConfirm} className="flex-1 py-4 rounded-2xl bg-destructive text-white font-black text-[10px] uppercase tracking-widest hover:brightness-110 shadow-2xl shadow-destructive/20 transition-all">Ya, Hapus</button>
+      <div className="flex flex-col gap-3 pt-2">
+        <button onClick={onConfirm} className="w-full py-5 rounded-2xl bg-destructive text-white font-black text-xs uppercase tracking-[0.2em] hover:opacity-90 shadow-xl shadow-destructive/20 transition-all">Ya, Hapus Mobil</button>
+        <button onClick={onCancel} className="w-full py-5 rounded-2xl bg-muted text-foreground font-black text-xs uppercase tracking-[0.2em] hover:bg-muted/80 transition-all">Batal</button>
       </div>
     </div>
   </div>
@@ -57,31 +57,42 @@ const Field = ({ label, error, children }) => (
 
 const inputClass = (err) => `w-full bg-muted/30 border rounded-2xl px-6 py-4 text-sm font-bold text-foreground outline-none transition-all placeholder:text-muted-foreground/30 ${err ? 'border-destructive/50 focus:ring-4 focus:ring-destructive/10' : 'border-border focus:border-primary/50 focus:ring-4 focus:ring-primary/5'}`;
 
-const CarFormModal = ({ car, onSave, onClose }) => {
-  const isEdit = !!car?._id;
-  const [form, setForm] = useState(car || EMPTY_CAR);
-  const [errors, setErrors] = useState({});
-  const set = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
-  
-  const validate = () => {
-    const e = {};
-    if (!form.name.trim()) e.name = 'Nama mobil wajib diisi';
-    if (!form.brand.trim()) e.brand = 'Merk mobil wajib diisi';
-    if (!form.pricePerDay || isNaN(form.pricePerDay) || Number(form.pricePerDay) <= 0) e.pricePerDay = 'Harga sewa harus bernilai positif';
-    if (!form.imageUrl.trim()) e.imageUrl = 'URL Foto mobil wajib diisi';
-    setErrors(e);
-    return Object.keys(e).length === 0;
+const CarFormModal = ({ car, onClose, onSave }) => {
+  const isEdit = !!car;
+  const [form, setForm] = useState({
+    name: car?.name || '',
+    brand: car?.brand || '',
+    category: car?.category || 'Luxury Sedan',
+    year: car?.year || 2024,
+    pricePerDay: car?.pricePerDay || '',
+    seats: car?.seats || 5,
+    transmission: car?.transmission || 'Automatic',
+    fuel: car?.fuel || 'Bensin',
+    status: car?.status || 'Tersedia',
+    stock: car?.stock || 1,
+    imageUrl: car?.imageUrl || '',
+  });
+  const [imageFile, setImageFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setForm(prev => ({ ...prev, imageUrl: URL.createObjectURL(file) }));
+    }
   };
 
-  const handleSave = () => {
-    if (!validate()) return;
-    const featuresArr = typeof form.features === 'string' ? form.features.split(',').map((f) => f.trim()).filter(Boolean) : form.features;
-    onSave({ ...form, id: form.id || 'car-' + Date.now(), pricePerDay: Number(form.pricePerDay), stock: Number(form.stock), year: Number(form.year), seats: Number(form.seats), rating: Number(form.rating), reviews: Number(form.reviews), features: featuresArr });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setUploading(true);
+    await onSave(form, imageFile);
+    setUploading(false);
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-fade-in" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="bg-card border border-border rounded-[3rem] shadow-[0_50px_100px_rgba(0,0,0,0.5)] w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/75 animate-fade-in" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="bg-card border border-border rounded-[3rem] shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]">
         <header className="flex items-center justify-between px-10 py-8 border-b border-border bg-muted/10">
           <div className="flex items-center gap-6">
             <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center shadow-inner">
@@ -101,7 +112,7 @@ const CarFormModal = ({ car, onSave, onClose }) => {
                 <img src={form.imageUrl} alt="preview" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div className="absolute bottom-6 left-6 flex items-center gap-2">
-                    <span className="px-3 py-1.5 bg-primary/20 backdrop-blur-md border border-primary/30 rounded-lg text-[8px] font-black uppercase tracking-widest text-primary">Foto Terpasang</span>
+                    <span className="px-3 py-1.5 bg-primary/20 border border-primary/30 rounded-lg text-[8px] font-black uppercase tracking-widest text-primary">Foto Terpasang</span>
                 </div>
             </div>
           )}

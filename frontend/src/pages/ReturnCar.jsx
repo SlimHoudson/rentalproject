@@ -177,7 +177,7 @@ const ReturnCar = () => {
 
       {/* Confirmation Modal */}
       {modal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-fade-in">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/75 animate-fade-in">
             <div className="bg-card border border-border rounded-[3rem] p-12 max-w-md w-full shadow-2xl text-center space-y-8">
                 <div className="w-20 h-20 rounded-3xl bg-primary/10 flex items-center justify-center mx-auto shadow-inner">
                     <span className="material-symbols-outlined text-4xl text-primary">published_with_changes</span>
@@ -199,7 +199,7 @@ const ReturnCar = () => {
       {/* Toast Notification */}
       {toast && (
         <div className="fixed bottom-12 right-12 z-[100] animate-slide-up">
-            <div className="bg-card/80 backdrop-blur-3xl border border-border shadow-2xl p-6 rounded-[2rem] flex items-center gap-6 min-w-[340px]">
+            <div className="bg-card border border-border shadow-xl p-6 rounded-2xl flex items-center gap-6 min-w-[340px]">
                 <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner ${
                     toast.type === 'success' ? 'bg-success/20 text-success' : 'bg-destructive/20 text-destructive'
                 }`}>

@@ -26,12 +26,11 @@ const ReceiptModal = ({ booking, onClose, user }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-overlay backdrop-blur-md animate-fade-in" onClick={onClose}>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/75 animate-fade-in" onClick={onClose}>
       <div className="bg-card rounded-[2.5rem] shadow-2xl w-full max-w-md overflow-hidden animate-zoom-in border border-border" onClick={(e) => e.stopPropagation()}>
         {/* Receipt Header */}
         <div className="bg-primary p-8 text-center text-white relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none bg-[radial-gradient(circle_at_50%_120%,rgba(255,255,255,1),transparent)]"></div>
-          <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/20 shadow-xl">
+          <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/20 shadow-md">
             <span className="material-symbols-outlined text-white text-3xl">receipt_long</span>
           </div>
           <h2 className="font-black text-xl tracking-tight uppercase">Bukti Transaksi</h2>
@@ -273,7 +272,7 @@ const BookingHistory = () => {
 
       {/* Cancel Confirmation */}
       {bookingToCancel && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-overlay backdrop-blur-md animate-fade-in">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/75 animate-fade-in">
           <div className="bg-card rounded-[2.5rem] p-10 max-w-sm w-full border border-border shadow-2xl animate-zoom-in text-center space-y-6">
             <div className="w-20 h-20 rounded-3xl bg-destructive/10 flex items-center justify-center mx-auto shadow-inner text-destructive">
               <span className="material-symbols-outlined text-4xl">warning</span>

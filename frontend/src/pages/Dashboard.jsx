@@ -82,14 +82,14 @@ export const AdminDashboard = () => {
   }
 
   return (
-    <div className="p-6 lg:p-12 space-y-12 animate-fade-in max-w-[1600px] mx-auto gpu-accelerate">
+    <div className="p-6 lg:p-12 space-y-12 animate-fade-in max-w-[1600px] mx-auto">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-2">
           <h2 className="text-4xl font-black tracking-tight text-foreground">Ringkasan Sistem</h2>
           <p className="text-muted-foreground font-medium">Metrik performa dan logistik armada rental secara real-time.</p>
         </div>
         <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-success/5 border border-success/20 text-[10px] font-black uppercase tracking-widest text-success">
-          <span className="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+          <span className="w-2 h-2 rounded-full bg-success"></span>
           Sistem Berjalan Optimal
         </div>
       </header>
@@ -102,8 +102,8 @@ export const AdminDashboard = () => {
           { label: 'Total Transaksi', value: `${bookings.length}`, suffix: 'Pesanan', icon: 'receipt_long', color: 'text-violet-500', bg: 'bg-violet-500/10', path: '/admin/bookings' },
           { label: 'Mobil Perawatan', value: `${maintenanceCount}`, suffix: 'Unit', icon: 'build', color: 'text-destructive', bg: 'bg-destructive/10', path: '/admin/cars' },
         ].map((stat) => (
-          <button key={stat.label} onClick={() => navigate(stat.path)} className="group card p-6 text-left hover:-translate-y-1 transition-all">
-            <div className={`w-12 h-12 rounded-2xl ${stat.bg} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
+          <button key={stat.label} onClick={() => navigate(stat.path)} className="group card p-6 text-left hover:border-primary/40 transition-colors">
+            <div className={`w-12 h-12 rounded-2xl ${stat.bg} flex items-center justify-center mb-5`}>
               <span className={`material-symbols-outlined text-2xl ${stat.color}`}>{stat.icon}</span>
             </div>
             <div className="space-y-1">
@@ -141,7 +141,7 @@ export const AdminDashboard = () => {
                   <YAxis axisLine={false} tickLine={false} stroke="var(--text-muted)" fontSize={10} tickFormatter={(v) => `${(v/1000000).toFixed(0)}M`} />
                   <Tooltip 
                     cursor={{fill: 'var(--muted)', opacity: 0.2}}
-                    contentStyle={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', boxShadow: 'var(--shadow-2xl)', padding: '12px' }}
+                    contentStyle={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', padding: '12px' }}
                   />
                   <Bar dataKey="total" fill="var(--primary)" radius={[6,6,0,0]} barSize={32} />
                   <Line type="monotone" dataKey="total" stroke="var(--foreground)" strokeWidth={4} dot={{ r: 6, fill: 'var(--foreground)', strokeWidth: 0 }} activeDot={{ r: 8 }} />
@@ -185,7 +185,7 @@ export const AdminDashboard = () => {
         </div>
       </div>
 
-      <div className="card overflow-hidden">
+      <div className="card overflow-hidden content-auto">
         <header className="p-8 border-b border-border flex justify-between items-center bg-muted/10">
           <div className="space-y-1">
             <h3 className="text-lg font-black tracking-tight">Transaksi Terkini</h3>
@@ -308,38 +308,35 @@ export const UserDashboard = () => {
   }
 
   return (
-    <div className="p-6 lg:p-12 space-y-12 animate-fade-in max-w-7xl mx-auto gpu-accelerate">
+    <div className="p-6 lg:p-12 space-y-12 animate-fade-in max-w-7xl mx-auto">
       {/* Premium Member Hero */}
-      <section className="relative group p-10 lg:p-16 rounded-[3rem] overflow-hidden bg-zinc-950 border border-white/5 shadow-[0_40px_100px_rgba(0,0,0,0.4)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(79,70,229,0.15),transparent_60%)]"></div>
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 blur-[150px] -mr-48 -mt-48 transition-all group-hover:opacity-80"></div>
-        
-        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-12">
-          <div className="space-y-8 max-w-xl">
-            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+      <section className="relative p-10 lg:p-14 rounded-3xl bg-zinc-900 border border-zinc-800 shadow-lg">
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-10">
+          <div className="space-y-6 max-w-xl">
+            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+              <span className="w-2 h-2 rounded-full bg-primary"></span>
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Akses Member Terverifikasi</span>
             </div>
-            <div className="space-y-4">
-              <h2 className="text-4xl lg:text-6xl font-black text-white leading-none tracking-tighter">
+            <div className="space-y-3">
+              <h2 className="text-3xl lg:text-5xl font-black text-white leading-tight tracking-tight">
                 Selamat datang kembali,<br /> <span className="text-primary italic">{user?.name?.split(' ')[0]}</span>.
               </h2>
-              <p className="text-zinc-400 text-lg leading-relaxed font-medium">
+              <p className="text-zinc-400 text-base leading-relaxed font-medium">
                 Pilihan armada mobil terbaik siap menemani setiap perjalanan dan momen istimewa Anda.
               </p>
             </div>
-            <button onClick={() => navigate('/cars')} className="btn btn-primary px-10 py-5 rounded-2xl group shadow-2xl shadow-primary/40 text-xs font-black uppercase tracking-[0.2em]">
+            <button onClick={() => navigate('/cars')} className="btn btn-primary px-8 py-4 rounded-xl shadow-lg shadow-primary/20 text-xs font-black uppercase tracking-[0.2em]">
               Jelajahi Armada
-              <span className="material-symbols-outlined transition-transform group-hover:translate-x-2">arrow_right_alt</span>
+              <span className="material-symbols-outlined">arrow_right_alt</span>
             </button>
           </div>
 
-          <div className="hidden lg:flex flex-col gap-6 p-8 bg-white/5 border border-white/10 rounded-[2.5rem] backdrop-blur-2xl">
+          <div className="hidden lg:flex flex-col gap-6 p-8 bg-zinc-950/60 border border-zinc-800 rounded-2xl">
             <div className="space-y-1">
               <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">ID Member</p>
               <p className="text-xs font-black text-white tracking-widest uppercase">{user?._id?.slice(-8).toUpperCase()}</p>
             </div>
-            <div className="h-px bg-white/10"></div>
+            <div className="h-px bg-zinc-800"></div>
             <div className="space-y-1">
               <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Status</p>
               <p className="text-xs font-black text-primary tracking-widest uppercase">Member Prioritas</p>
@@ -354,9 +351,9 @@ export const UserDashboard = () => {
           { id: 'active', label: 'Rental Berjalan', value: activeCount, unit: 'Mobil', icon: 'key', color: 'text-blue-500', bg: 'bg-blue-500/10', action: () => navigate('/history') },
           { id: 'loyalty', label: 'Poin Loyalitas', value: currentPoints.toLocaleString(), unit: 'Poin', icon: 'stars', color: 'text-amber-500', bg: 'bg-amber-500/10', action: handleCheckPoints, sub: currentPoints >= 1000 ? 'Diskon Tersedia' : null }
         ].map(item => (
-          <button key={item.id} onClick={item.action} className="group card p-8 flex items-center gap-6 text-left hover:-translate-y-1 transition-all">
-            <div className={`w-16 h-16 rounded-[1.25rem] ${item.bg || 'bg-muted/50'} flex items-center justify-center group-hover:scale-110 transition-transform`}>
-              <span className={`material-symbols-outlined text-3xl ${item.color || 'text-primary'}`}>{item.icon}</span>
+          <button key={item.id} onClick={item.action} className="card p-8 flex items-center gap-6 text-left hover:border-primary/40 transition-colors">
+            <div className={`w-14 h-14 rounded-2xl ${item.bg || 'bg-muted/50'} flex items-center justify-center`}>
+              <span className={`material-symbols-outlined text-2xl ${item.color || 'text-primary'}`}>{item.icon}</span>
             </div>
             <div className="space-y-1 flex-1">
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">{item.label}</p>
@@ -364,7 +361,7 @@ export const UserDashboard = () => {
                 <p className="text-3xl font-black tracking-tighter text-foreground">{item.value}</p>
                 <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">{item.unit}</span>
               </div>
-              {item.sub && <p className="text-[9px] font-black uppercase tracking-widest text-primary animate-pulse">{item.sub}</p>}
+              {item.sub && <p className="text-[9px] font-black uppercase tracking-widest text-primary">{item.sub}</p>}
             </div>
           </button>
         ))}
@@ -391,9 +388,9 @@ export const UserDashboard = () => {
               </div>
             ) : (
               recentBookings.map((b, i) => (
-                <div key={b._id || i} className="p-6 flex items-center gap-6 hover:bg-muted/10 transition-all group">
-                  <div className="w-24 h-16 rounded-xl bg-muted flex-shrink-0 overflow-hidden border border-border group-hover:scale-105 transition-transform">
-                    <img src={b.car?.imageUrl} alt="" className="w-full h-full object-cover" />
+                <div key={b._id || i} className="p-6 flex items-center gap-6 hover:bg-muted/10 transition-colors">
+                  <div className="w-24 h-16 rounded-xl bg-muted flex-shrink-0 overflow-hidden border border-border">
+                    <img src={b.car?.imageUrl} alt="" className="w-full h-full object-cover" loading="lazy" />
                   </div>
                   <div className="flex-1 min-w-0 space-y-1">
                     <p className="font-black text-sm uppercase tracking-tight truncate">{b.car?.name || 'Kendaraan'}</p>
@@ -427,10 +424,10 @@ export const UserDashboard = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {cars.filter(c => c.status === 'Tersedia').slice(0, 4).map(car => (
-              <div key={car._id} onClick={() => navigate('/cars')} className="group card p-5 space-y-5 cursor-pointer hover:border-primary/40 transition-all">
+              <div key={car._id} onClick={() => navigate('/cars')} className="card p-5 space-y-5 cursor-pointer hover:border-primary/40 transition-colors">
                 <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-muted relative border border-border">
-                  <img src={car.imageUrl} alt={car.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute top-3 right-3 px-3 py-1.5 bg-background/80 backdrop-blur-md rounded-xl text-[8px] font-black uppercase tracking-widest shadow-2xl border border-border">Tersedia</div>
+                  <img src={car.imageUrl} alt={car.name} className="w-full h-full object-cover" loading="lazy" />
+                  <div className="absolute top-3 right-3 px-3 py-1 bg-background/90 rounded-lg text-[8px] font-black uppercase tracking-widest border border-border">Tersedia</div>
                 </div>
                 <div className="space-y-3">
                   <h4 className="font-black text-sm uppercase tracking-tight truncate">{car.name}</h4>
@@ -439,8 +436,8 @@ export const UserDashboard = () => {
                       <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Tarif / Hari</p>
                       <p className="text-xs font-black text-foreground tracking-tight">Rp {car.pricePerDay?.toLocaleString('id-ID')}</p>
                     </div>
-                    <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                      <span className="material-symbols-outlined text-sm text-muted-foreground group-hover:text-primary transition-all">arrow_forward</span>
+                    <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                      <span className="material-symbols-outlined text-sm text-muted-foreground">arrow_forward</span>
                     </div>
                   </div>
                 </div>
@@ -453,11 +450,11 @@ export const UserDashboard = () => {
       {/* Synchronized Protocol Notifications */}
       {toast && (
         <div className="fixed bottom-12 right-12 z-[100] animate-slide-up">
-          <div className="bg-card/80 backdrop-blur-3xl border border-border shadow-[0_40px_100px_rgba(0,0,0,0.3)] p-6 rounded-[2rem] flex items-center gap-6 min-w-[380px]">
-            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner ${
+          <div className="bg-card border border-border shadow-xl p-6 rounded-2xl flex items-center gap-6 min-w-[340px]">
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
               toast.type === 'success' ? 'bg-success/20 text-success' : 'bg-primary/20 text-primary'
             }`}>
-              <span className="material-symbols-outlined text-2xl">{toast.type === 'success' ? 'verified' : 'info_i'}</span>
+              <span className="material-symbols-outlined text-2xl">{toast.type === 'success' ? 'verified' : 'info'}</span>
             </div>
             <div className="space-y-1">
               <p className="text-xs font-black uppercase tracking-widest text-foreground">{toast.title}</p>

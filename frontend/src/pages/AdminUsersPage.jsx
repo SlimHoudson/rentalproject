@@ -170,7 +170,7 @@ const AdminUsersPage = () => {
 
             {/* Modals */}
             {modal?.type === 'delete' && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-fade-in">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/75 animate-fade-in">
                     <div className="bg-card border border-border rounded-[3rem] p-12 max-w-md w-full shadow-2xl text-center space-y-8">
                         <div className="w-20 h-20 rounded-3xl bg-destructive/10 flex items-center justify-center mx-auto shadow-inner">
                             <span className="material-symbols-outlined text-4xl text-destructive">warning</span>
@@ -188,7 +188,7 @@ const AdminUsersPage = () => {
             )}
 
             {modal?.type === 'role' && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-fade-in">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/75 animate-fade-in">
                     <div className="bg-card border border-border rounded-[3rem] p-12 max-w-md w-full shadow-2xl text-center space-y-8">
                         <div className="w-20 h-20 rounded-3xl bg-primary/10 flex items-center justify-center mx-auto shadow-inner">
                             <span className="material-symbols-outlined text-4xl text-primary">security</span>

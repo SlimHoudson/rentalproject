@@ -49,12 +49,12 @@ const Register = () => {
         <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-zinc-950">
             {/* Cinematic Background */}
             <div className="fixed inset-0 z-0">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(79,70,229,0.15),transparent_50%)]"></div>
-                <div className="absolute inset-0 bg-black/60"></div>
+                <div className="absolute inset-0 bg-black/75"></div>
                 <img 
                     src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=2083&auto=format&fit=crop" 
                     alt="" 
-                    className="w-full h-full object-cover mix-blend-overlay opacity-40 scale-110 animate-pulse-slow" 
+                    className="w-full h-full object-cover opacity-20" 
+                    loading="eager"
                 />
             </div>
 
@@ -63,7 +63,7 @@ const Register = () => {
                 <div className="hidden md:block space-y-12">
                     <div className="space-y-6">
                         <div className="flex items-center gap-4">
-                            <div className="w-14 h-14 rounded-3xl bg-primary/20 backdrop-blur-2xl border border-primary/30 flex items-center justify-center shadow-2xl">
+                            <div className="w-14 h-14 rounded-3xl bg-primary/20 border border-primary/30 flex items-center justify-center shadow-lg">
                                 <span className="material-symbols-outlined text-3xl text-primary">auto_awesome</span>
                             </div>
                             <div>
@@ -99,7 +99,7 @@ const Register = () => {
 
                 {/* Right: Register Interface */}
                 <div className="w-full max-w-md mx-auto">
-                    <div className="bg-zinc-900/50 backdrop-blur-3xl border border-zinc-800 rounded-[3rem] p-10 shadow-2xl space-y-8">
+                    <div className="bg-zinc-900 border border-zinc-800 rounded-[2.5rem] p-10 shadow-2xl space-y-8">
                         <header className="space-y-2">
                             <h3 className="text-3xl font-black text-white tracking-tight">Daftar Akun</h3>
                             <p className="text-zinc-500 text-sm font-medium">Buat akun untuk memulai pemesanan armada.</p>

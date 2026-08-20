@@ -68,7 +68,7 @@ const CarsPage = () => {
   };
 
   return (
-    <div className="p-6 lg:p-12 space-y-10 animate-fade-in gpu-accelerate">
+    <div className="p-6 lg:p-12 space-y-10 animate-fade-in">
       <header className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
@@ -182,7 +182,7 @@ const CarsPage = () => {
 
       {/* Premium Booking Modal */}
       {selectedCar && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-overlay backdrop-blur-md animate-fade-in">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/75 animate-fade-in">
           <div className="bg-card rounded-[2.5rem] shadow-2xl w-full max-w-lg overflow-hidden animate-zoom-in border border-border">
             <div className="relative h-48">
               <img src={selectedCar.imageUrl} alt="" className="w-full h-full object-cover" />

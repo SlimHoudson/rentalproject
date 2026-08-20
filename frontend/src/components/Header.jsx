@@ -73,7 +73,7 @@ const Header = ({ title }) => {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <header className="sticky top-0 z-[50] w-full bg-nav-bg backdrop-blur-xl border-b border-nav-border">
+    <header className="sticky top-0 z-[50] w-full bg-card/95 border-b border-border">
       <div className="max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between gap-4">
         {/* Left: Branding & Nav */}
         <div className="flex items-center gap-8">
@@ -206,7 +206,7 @@ const Header = ({ title }) => {
 
       {/* Logout Modal */}
       {showLogoutModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-overlay backdrop-blur-md animate-fade-in">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/70 animate-fade-in">
           <div className="bg-card rounded-[2.5rem] p-10 max-w-sm w-full border border-border shadow-2xl animate-zoom-in text-center space-y-6">
             <div className="w-20 h-20 rounded-3xl bg-destructive/10 flex items-center justify-center mx-auto shadow-inner text-destructive animate-bounce-subtle">
               <span className="material-symbols-outlined text-4xl">logout</span>

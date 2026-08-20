@@ -70,7 +70,7 @@ const AdminChat = () => {
     <div className="flex h-[calc(100vh-160px)] bg-card border border-border rounded-[3rem] overflow-hidden shadow-2xl animate-fade-in max-w-[1600px] mx-auto">
       {/* Sidebar: List Conversations */}
       <aside className="w-96 border-r border-border flex flex-col bg-muted/10">
-        <header className="p-10 border-b border-border bg-card/50 backdrop-blur-md">
+        <header className="p-10 border-b border-border bg-card">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center shadow-inner">
                 <span className="material-symbols-outlined text-primary text-2xl">forum</span>
@@ -128,7 +128,7 @@ const AdminChat = () => {
         {selectedUser ? (
           <>
             {/* Header */}
-            <header className="px-10 py-8 border-b border-border flex items-center justify-between bg-card/50 backdrop-blur-xl">
+            <header className="px-10 py-8 border-b border-border flex items-center justify-between bg-card">
               <div className="flex items-center gap-6">
                 <div className="relative">
                     <div className="w-14 h-14 rounded-2xl bg-primary text-white flex items-center justify-center font-black text-xl shadow-2xl shadow-primary/30">
@@ -156,7 +156,7 @@ const AdminChat = () => {
             </header>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto px-10 py-10 space-y-8 no-scrollbar bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] bg-fixed">
+            <div className="flex-1 overflow-y-auto px-10 py-10 space-y-8 no-scrollbar bg-muted/5">
               {messages.map((msg, i) => (
                 <div key={i} className={`flex flex-col ${msg.sender === user?.id || msg.sender === user?._id ? 'items-end' : 'items-start'}`}>
                   <div className={`max-w-[70%] p-6 rounded-[2rem] text-sm relative group ${
@@ -178,7 +178,7 @@ const AdminChat = () => {
             </div>
 
             {/* Input Area */}
-            <footer className="p-8 border-t border-border bg-card/50 backdrop-blur-xl">
+            <footer className="p-8 border-t border-border bg-card">
               <form onSubmit={handleSend} className="max-w-[1000px] mx-auto flex items-center gap-6 p-2 pr-4 bg-muted/30 rounded-[2.5rem] border border-border focus-within:border-primary/30 transition-all shadow-inner">
                 <button type="button" className="w-12 h-12 rounded-full hover:bg-muted transition-all text-muted-foreground flex items-center justify-center">
                     <span className="material-symbols-outlined">add_circle</span>

@@ -291,10 +291,9 @@ const CheckoutPage = () => {
 
               {/* Loyalty Reward */}
               <div className="p-8 rounded-[2.5rem] bg-zinc-900 border border-zinc-800 text-white relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 blur-[80px] group-hover:scale-150 transition-transform duration-1000"></div>
                 <div className="flex items-center justify-between relative z-10">
                   <div className="flex items-center gap-5">
-                    <div className="w-14 h-14 bg-primary/10 border border-primary/20 rounded-3xl flex items-center justify-center text-primary shadow-2xl">
+                    <div className="w-14 h-14 bg-primary/10 border border-primary/20 rounded-3xl flex items-center justify-center text-primary shadow-lg">
                       <span className="material-symbols-outlined text-3xl">stars</span>
                     </div>
                     <div>
@@ -351,19 +350,19 @@ const CheckoutPage = () => {
               <button 
                 onClick={handleConfirm}
                 disabled={isProcessing}
-                className="btn btn-primary w-full py-5 text-sm font-black uppercase tracking-widest shadow-[0_20px_50px_rgba(79,70,229,0.3)] hover:-translate-y-1 active:translate-y-0 transition-all flex items-center justify-center gap-3"
+                className="btn btn-primary w-full py-5 text-sm font-black uppercase tracking-widest shadow-lg hover:opacity-95 transition-all flex items-center justify-center gap-3"
               >
                 {isProcessing ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                 ) : (
                   <>
-                    {step === 1 ? 'Lanjut ke Pembayaran' : 'Bayar Sekarang'}
+                    <span>{step === 1 ? 'Lanjut ke Pembayaran' : 'Bayar Sekarang'}</span>
                     <span className="material-symbols-outlined text-lg">{step === 1 ? 'arrow_forward' : 'lock'}</span>
                   </>
                 )}
               </button>
             </div>
-            
+
             <div className="p-4 bg-muted/30 flex items-center justify-center gap-3 border-t border-border">
               <span className="material-symbols-outlined text-primary text-base">verified_user</span>
               <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Transaksi Terenkripsi & Aman</span>
@@ -374,7 +373,7 @@ const CheckoutPage = () => {
 
       {/* Cancel Modal */}
       {showCancelConfirm && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-overlay backdrop-blur-md animate-fade-in">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/75 animate-fade-in">
           <div className="bg-card rounded-[2.5rem] p-10 max-w-sm w-full border border-border shadow-2xl animate-zoom-in text-center space-y-6">
             <div className="w-20 h-20 rounded-3xl bg-destructive/10 flex items-center justify-center mx-auto shadow-inner text-destructive">
               <span className="material-symbols-outlined text-4xl">warning</span>
@@ -393,7 +392,7 @@ const CheckoutPage = () => {
 
       {/* Demo Payment Modal */}
       {showDemoMidtrans && !isSuccess && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-overlay backdrop-blur-md animate-fade-in">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/75 animate-fade-in">
           <div className="bg-card rounded-[2.5rem] p-10 max-w-md w-full border border-border shadow-2xl animate-zoom-in text-center space-y-8">
             <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto text-primary shadow-inner">
               <span className="material-symbols-outlined text-4xl">sim_card</span>
@@ -423,11 +422,8 @@ const CheckoutPage = () => {
       {/* Success View */}
       {isSuccess && (
         <div className="fixed inset-0 z-[200] bg-zinc-950 flex flex-col items-center justify-center p-8 text-center animate-fade-in text-white overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full opacity-30">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 blur-[120px] rounded-full animate-pulse"></div>
-          </div>
           <div className="relative z-10 space-y-10 max-w-lg">
-            <div className="w-32 h-32 bg-primary rounded-[2.5rem] flex items-center justify-center mx-auto shadow-[0_0_80px_rgba(79,70,229,0.5)] animate-bounce-subtle border border-white/20">
+            <div className="w-32 h-32 bg-primary rounded-[2.5rem] flex items-center justify-center mx-auto shadow-lg border border-white/20">
               <span className="material-symbols-outlined text-7xl font-bold">verified</span>
             </div>
             <div className="space-y-4">
@@ -438,7 +434,7 @@ const CheckoutPage = () => {
               <div className="w-64 mx-auto h-1 bg-white/10 rounded-full overflow-hidden">
                 <div className="bg-primary h-full animate-[progress_3s_linear]"></div>
               </div>
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mt-6 animate-pulse">Mengalihkan ke riwayat pesanan...</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mt-6">Mengalihkan ke riwayat pesanan...</p>
             </div>
           </div>
         </div>
