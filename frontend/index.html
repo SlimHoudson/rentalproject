@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' blob: data: https://app.sandbox.midtrans.com https://app.midtrans.com; connect-src * 'unsafe-inline' blob: data: https://app.sandbox.midtrans.com https://app.midtrans.com; img-src * data: blob: https://app.sandbox.midtrans.com https://app.midtrans.com; frame-src * https://app.sandbox.midtrans.com https://app.midtrans.com; style-src * 'unsafe-inline'; font-src * data:;" />
+    <meta name="description" content="Bahrayyan LuxeDrive — Rental mobil premium dan mewah. Pesan sekarang dengan mudah." />
+    <title>Bahrayyan LuxeDrive</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Preconnect to speed up external resource loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://app.sandbox.midtrans.com" />
+
+    <!-- Fonts — subset + display=swap prevents layout shift -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&subset=latin&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+
+    <!-- Midtrans Snap (loaded async so it doesn't block rendering) -->
+    <script async src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-YOUR_KEY"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+
