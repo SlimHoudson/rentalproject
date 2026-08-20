@@ -23,20 +23,37 @@ const safeJSONParse = (key, fallback = null) => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  // Load dari localStorage saat pertama kali app dibuka
-  useEffect(() => {
-    const savedToken = localStorage.getItem('luxedrive_token');
-    const savedUser = safeJSONParse('luxedrive_user');
-    if (savedToken && savedUser) {
-      setToken(savedToken);
-      setUser(savedUser);
+  const [user, setUser] = useState(() => safeJSONParse('luxedrive_user', null));
+  const [token, setToken] = useState(() => {
+    try {
+      return localStorage.getItem('luxedrive_token') || null;
+    } catch {
+      return null;
     }
-    setLoading(false);
-  }, []);
+  });
+  const [loading, setLoading] = useState(false);
+
+  // Sync token to API headers & refresh user profile in background
+  useEffect(() => {
+    if (token) {
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      // Verify session in background without blocking initial render
+      api.get('/auth/me')
+        .then((res) => {
+          if (res.data?.user) {
+            setUser(res.data.user);
+            localStorage.setItem('luxedrive_user', JSON.stringify(res.data.user));
+          }
+        })
+        .catch((err) => {
+          console.warn('Session verification warning:', err.message);
+          // If token is explicitly unauthorized (401), clear and logout
+          if (err.response?.status === 401) {
+            logout();
+          }
+        });
+    }
+  }, [token]);
 
   const login = async (email, password) => {
     try {

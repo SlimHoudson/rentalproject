@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { ProtectedRoute, AdminRoute } from './components/ProtectedRoute';
 
 import Layout from './components/Layout';
@@ -39,6 +39,14 @@ const PageLoader = () => (
   </div>
 );
 
+// Intelligent Root Redirect based on user authentication
+const RootRedirect = () => {
+  const { user, loading } = useAuth();
+  if (loading) return <PageLoader />;
+  if (!user) return <Navigate to="/login" replace />;
+  return <Navigate to={user.role === 'admin' ? '/admin/dashboard' : '/dashboard'} replace />;
+};
+
 function App() {
   return (
     <AuthProvider>
@@ -48,7 +56,7 @@ function App() {
             {/* Public Access Gates */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/" element={<RootRedirect />} />
 
             {/* ====== LUXURY USER ECOSYSTEM ====== */}
             <Route path="/dashboard" element={

@@ -291,11 +291,17 @@ const AdminCarsPage = () => {
     }
   };
 
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 8;
+
   const displayed = cars.filter((c) => {
     const matchStatus = filterStatus === 'Semua' || c.status === filterStatus;
     const matchSearch = (c.name || '').toLowerCase().includes(search.toLowerCase()) || (c.brand || '').toLowerCase().includes(search.toLowerCase());
     return matchStatus && matchSearch;
   });
+
+  const totalPages = Math.max(1, Math.ceil(displayed.length / PAGE_SIZE));
+  const paginatedCars = displayed.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   if (loading) {
     return (
@@ -358,14 +364,14 @@ const AdminCarsPage = () => {
               className="w-full pl-14 pr-6 py-4 rounded-2xl text-xs font-bold border border-border bg-muted/30 outline-none focus:bg-card focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all tracking-wide" 
               placeholder="Cari nama atau merk mobil..." 
               value={search} 
-              onChange={(e) => setSearch(e.target.value)} 
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }} 
             />
           </div>
           <div className="flex items-center gap-3 p-2 bg-muted/30 rounded-[1.5rem] overflow-x-auto max-w-full no-scrollbar border border-border">
             {['Semua', 'Tersedia', 'Disewa', 'Perawatan'].map((s) => (
               <button 
                 key={s} 
-                onClick={() => setFilterStatus(s)} 
+                onClick={() => { setFilterStatus(s); setPage(1); }} 
                 className={`px-6 py-2.5 rounded-[1.125rem] text-[9px] font-black uppercase tracking-[0.15em] transition-all whitespace-nowrap ${
                     filterStatus === s ? 'bg-card text-primary shadow-xl border border-border' : 'text-muted-foreground hover:text-foreground'
                 }`}
@@ -398,8 +404,8 @@ const AdminCarsPage = () => {
                     </td>
                 </tr>
               ) : (
-                displayed.map((car) => (
-                  <tr key={car._id} className="hover:bg-muted/5 transition-colors group">
+                paginatedCars.map((car) => (
+                  <tr key={car._id || car.id} className="hover:bg-muted/5 transition-colors group">
                     <td className="px-8 py-6">
                       <div className="flex items-center gap-6">
                         <div className="w-24 h-16 rounded-2xl overflow-hidden bg-muted border border-border group-hover:scale-105 transition-transform">
@@ -454,6 +460,53 @@ const AdminCarsPage = () => {
             </tbody>
           </table>
         </div>
+
+        {/* Fleet Table Pagination Footer */}
+        {displayed.length > 0 && (
+          <footer className="p-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 bg-muted/5">
+            <p className="text-xs font-bold text-muted-foreground">
+              Menampilkan <span className="text-foreground font-black">{(page - 1) * PAGE_SIZE + 1}</span> - <span className="text-foreground font-black">{Math.min(page * PAGE_SIZE, displayed.length)}</span> dari <span className="text-foreground font-black">{displayed.length}</span> unit mobil
+            </p>
+            
+            {totalPages > 1 && (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setPage(p => Math.max(p - 1, 1))}
+                  disabled={page === 1}
+                  className="px-4 py-2 rounded-xl bg-card border border-border text-xs font-black text-muted-foreground hover:text-primary hover:border-primary disabled:opacity-30 transition-all flex items-center gap-1"
+                >
+                  <span className="material-symbols-outlined text-base">chevron_left</span>
+                  Sebelumnya
+                </button>
+
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+                    <button
+                      key={n}
+                      onClick={() => setPage(n)}
+                      className={`w-9 h-9 rounded-xl text-xs font-black transition-all ${
+                        page === n
+                          ? 'bg-primary text-white shadow-md shadow-primary/20'
+                          : 'bg-card border border-border text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setPage(p => Math.min(p + 1, totalPages))}
+                  disabled={page === totalPages}
+                  className="px-4 py-2 rounded-xl bg-card border border-border text-xs font-black text-muted-foreground hover:text-primary hover:border-primary disabled:opacity-30 transition-all flex items-center gap-1"
+                >
+                  Berikutnya
+                  <span className="material-symbols-outlined text-base">chevron_right</span>
+                </button>
+              </div>
+            )}
+          </footer>
+        )}
       </div>
 
       {/* Render Modals and Toasts */}

@@ -6,9 +6,11 @@ const CarsPage = () => {
   const navigate = useNavigate();
   const [cars, setCars] = useState([]);
   const [search, setSearch] = useState('');
+  const [category, setCategory] = useState('Semua');
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const [selectedCar, setSelectedCar] = useState(null);
   const [bookingDates, setBookingDates] = useState({
     start: new Date().toISOString().split('T')[0],
@@ -22,15 +24,18 @@ const CarsPage = () => {
     const fetchCars = async (pageNumber = 1) => {
       try {
         setLoading(true);
-        const res = await api.get(`/cars?page=${pageNumber}&limit=9&search=${search}`, {
+        const catQuery = category !== 'Semua' ? `&category=${encodeURIComponent(category)}` : '';
+        const res = await api.get(`/cars?page=${pageNumber}&limit=9&search=${encodeURIComponent(search)}${catQuery}`, {
           signal: controller.signal
         });
         const data = res.data;
         const carsData = data.data || data;
         const parsedCars = Array.isArray(carsData) ? carsData : [];
-        const pages = data.meta?.totalPages || (data.total ? Math.ceil(data.total / 9) : 1);
+        const total = data.meta?.total || data.total || parsedCars.length;
+        const pages = data.meta?.totalPages || Math.max(1, Math.ceil(total / 9));
         setCars(parsedCars);
         setTotalPages(pages);
+        setTotalCount(total);
       } catch (err) {
         if (err.name !== 'CanceledError') {
           console.error('Failed to fetch cars:', err.message);
@@ -48,7 +53,7 @@ const CarsPage = () => {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [page, search]);
+  }, [page, search, category]);
 
   const handleBookingConfirm = () => {
     const start = new Date(bookingDates.start);
@@ -73,7 +78,10 @@ const CarsPage = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <h2 className="text-4xl lg:text-5xl font-black tracking-tight text-foreground">Katalog Armada</h2>
-            <p className="text-muted-foreground mt-2 text-lg">Pilih kendaraan mewah untuk momen tak terlupakan Anda.</p>
+            <p className="text-muted-foreground mt-2 text-lg">
+              Pilih kendaraan mewah untuk momen tak terlupakan Anda.
+              {totalCount > 0 && <span className="text-primary font-bold ml-2">({totalCount} unit tersedia)</span>}
+            </p>
           </div>
           
           <div className="relative group min-w-[300px]">
@@ -89,8 +97,18 @@ const CarsPage = () => {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          {['Semua', 'SUV', 'Sedan', 'Luxury', 'Sport'].map(cat => (
-            <button key={cat} className="px-5 py-2 rounded-full border border-border text-xs font-bold hover:bg-muted transition-all active:scale-95">{cat}</button>
+          {['Semua', 'Luxury Sedan', 'SUV Premium', 'Sports Car', 'Convertible', 'Electric'].map(cat => (
+            <button 
+              key={cat} 
+              onClick={() => { setCategory(cat); setPage(1); }}
+              className={`px-5 py-2.5 rounded-full border text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${
+                category === cat 
+                  ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20' 
+                  : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground'
+              }`}
+            >
+              {cat}
+            </button>
           ))}
         </div>
       </header>
@@ -101,13 +119,31 @@ const CarsPage = () => {
             <div key={i} className="aspect-[4/5] rounded-[2.5rem] bg-muted animate-pulse border border-border"></div>
           ))}
         </div>
+      ) : cars.length === 0 ? (
+        <div className="text-center py-24 bg-card rounded-[2.5rem] border border-border shadow-sm space-y-6">
+          <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto">
+            <span className="material-symbols-outlined text-4xl opacity-30">directions_car</span>
+          </div>
+          <div className="space-y-2">
+            <p className="text-foreground font-black text-xl uppercase tracking-tight">Tidak Ada Mobil Ditemukan</p>
+            <p className="text-muted-foreground text-sm max-w-md mx-auto">Coba ubah kata kunci pencarian atau pilih kategori lain untuk melihat armada kami.</p>
+          </div>
+          {(search || category !== 'Semua') && (
+            <button 
+              onClick={() => { setSearch(''); setCategory('Semua'); setPage(1); }}
+              className="btn btn-primary px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest"
+            >
+              Reset Filter Pencarian
+            </button>
+          )}
+        </div>
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 content-auto">
             {cars.map((car) => (
-              <div key={car._id} className="group card !p-0 overflow-hidden flex flex-col hover:border-primary/40 transition-colors">
+              <div key={car._id || car.id} className="group card !p-0 overflow-hidden flex flex-col hover:border-primary/40 transition-colors">
                 <div className="relative h-64 overflow-hidden">
-                  <img src={car.imageUrl} alt={car.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <img src={car.imageUrl} alt={car.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
                   <div className="absolute top-5 right-5 px-3 py-1 bg-white/90 dark:bg-zinc-900/90 rounded-full text-[10px] font-black text-foreground shadow-sm uppercase tracking-widest border border-border">
                     {car.category || 'Luxury'}
                   </div>
@@ -158,25 +194,44 @@ const CarsPage = () => {
             ))}
           </div>
 
-          <div className="flex justify-center items-center pt-10 gap-3">
-            <button 
-              onClick={() => setPage(p => Math.max(p - 1, 1))} 
-              disabled={page === 1} 
-              className="w-12 h-12 rounded-2xl bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary disabled:opacity-30 transition-all shadow-sm"
-            >
-              <span className="material-symbols-outlined">chevron_left</span>
-            </button>
-            <div className="flex items-center gap-2 px-6 py-3 bg-muted/30 border border-border rounded-2xl font-black text-xs text-muted-foreground">
-              HALAMAN <span className="text-foreground">{page}</span> DARI <span className="text-foreground">{totalPages}</span>
+          {/* Enhanced Numbered Pagination */}
+          {totalPages > 1 && (
+            <div className="flex flex-wrap justify-center items-center pt-10 gap-2">
+              <button 
+                onClick={() => { setPage(p => Math.max(p - 1, 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
+                disabled={page === 1} 
+                className="px-4 h-12 rounded-2xl bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary disabled:opacity-30 transition-all shadow-sm gap-1 text-xs font-black uppercase tracking-wider"
+              >
+                <span className="material-symbols-outlined text-lg">chevron_left</span>
+                <span className="hidden sm:inline">Sebelumnya</span>
+              </button>
+
+              <div className="flex items-center gap-1.5 px-2">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+                  <button
+                    key={num}
+                    onClick={() => { setPage(num); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    className={`w-12 h-12 rounded-2xl font-black text-xs transition-all ${
+                      page === num 
+                        ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-105' 
+                        : 'bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary/40'
+                    }`}
+                  >
+                    {num}
+                  </button>
+                ))}
+              </div>
+
+              <button 
+                onClick={() => { setPage(p => Math.min(p + 1, totalPages)); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
+                disabled={page === totalPages} 
+                className="px-4 h-12 rounded-2xl bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary disabled:opacity-30 transition-all shadow-sm gap-1 text-xs font-black uppercase tracking-wider"
+              >
+                <span className="hidden sm:inline">Berikutnya</span>
+                <span className="material-symbols-outlined text-lg">chevron_right</span>
+              </button>
             </div>
-            <button 
-              onClick={() => setPage(p => Math.min(p + 1, totalPages))} 
-              disabled={page === totalPages} 
-              className="w-12 h-12 rounded-2xl bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary disabled:opacity-30 transition-all shadow-sm"
-            >
-              <span className="material-symbols-outlined">chevron_right</span>
-            </button>
-          </div>
+          )}
         </>
       )}
 
