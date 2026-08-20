@@ -11,7 +11,7 @@ if (!cached) {
 }
 
 async function connectDB() {
-  if (cached.conn && mongoose.connection.readyState >= 1) {
+  if (cached.conn && mongoose.connection.readyState === 1) {
     return cached.conn;
   }
 
@@ -19,11 +19,13 @@ async function connectDB() {
     const uri = process.env.MONGODB_URI;
     if (!uri) {
       console.warn("⚠️ MONGODB_URI is not defined in environment variables");
-      return null;
+      throw new Error("MONGODB_URI is not configured in Environment Variables");
     }
 
     const opts = {
       bufferCommands: false,
+      serverSelectionTimeoutMS: 7000,
+      connectTimeoutMS: 7000,
     };
 
     cached.promise = mongoose.connect(uri, opts).then((mongooseInstance) => {
